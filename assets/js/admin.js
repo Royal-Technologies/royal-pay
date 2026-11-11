@@ -58,12 +58,12 @@
             $('.rp-color-picker').wpColorPicker();
         }
 
-        // Color preset click
-        $('.rp-color-preset').on('click', function() {
+        // Color preset and palette click handler
+        $('.rp-color-preset, .rp-palette-card').on('click', function() {
             var primary = $(this).data('primary');
             var dark = $(this).data('dark');
 
-            $('.rp-color-preset').removeClass('active');
+            $('.rp-color-preset, .rp-palette-card').removeClass('active');
             $(this).addClass('active');
 
             $('#royalpay_primary_color').val(primary).trigger('change');

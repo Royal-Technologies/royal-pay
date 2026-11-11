@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Royal Pay Agent</string>
+    <string name="pairing_title">Pair with Royal Pay SaaS</string>
+    <string name="scan_qr_prompt">Scan the Device Registration QR Code from your WordPress Royal Pay Admin Dashboard.</string>
+    <string name="status_unpaired">Device Not Paired</string>
+    <string name="status_connected">Connected &amp; Monitoring</string>
+    <string name="sync_now">Sync Unsent Transactions</string>
+    <string name="pair_device_btn">Scan QR to Pair</string>
+    <string name="unsynced_count_label">Pending Ingestion Queue:</string>
+    <string name="battery_label">Battery Level:</string>
+    <string name="device_id_label">Device UUID:</string>
+    <string name="permissions_required">SMS &amp; Camera permissions are required to automate verification.</string>
+</resources>

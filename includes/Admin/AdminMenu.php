@@ -704,66 +704,133 @@ class AdminMenu {
             <?php self::renderHeader('⚙️', __('Royal Pay Settings & Configuration', 'royalpay'), __('Manage supported plugins, paid order statuses, theme colors, and gateways.', 'royalpay')); ?>
             <?php settings_errors('royalpay_notices'); ?>
 
-            <div class="royalpay-card" style="margin-top:20px;">
-                <!-- Instant Switching Client-side Tabs -->
-                <div class="rp-nav-tabs">
-                    <button type="button" class="rp-tab-btn active" data-tab="tab-general">⚙️ <?php esc_html_e('General Settings', 'royalpay'); ?></button>
-                    <button type="button" class="rp-tab-btn" data-tab="tab-integrations">🔌 <?php esc_html_e('Supported Plugins & Paid Status', 'royalpay'); ?></button>
-                    <button type="button" class="rp-tab-btn" data-tab="tab-colors">🎨 <?php esc_html_e('Theme & Colors', 'royalpay'); ?></button>
-                    <button type="button" class="rp-tab-btn" data-tab="tab-about">🏢 <?php esc_html_e('About Royal Technologies', 'royalpay'); ?></button>
-                </div>
-
+            <div class="rp-settings-container" style="margin-top:24px;">
                 <form method="POST">
                     <?php wp_nonce_field('royalpay_settings_action', 'royalpay_settings_nonce'); ?>
 
-                    <!-- Tab 1: General Settings -->
-                    <div id="tab-general" class="rp-tab-pane active">
-                        <table class="form-table">
-                            <tr>
-                                <th scope="row"><label><?php esc_html_e('Order Reference Prefix', 'royalpay'); ?></label></th>
-                                <td>
-                                    <input type="text" name="royalpay_ref_prefix" value="<?php echo esc_attr($refPrefix); ?>" class="regular-text" style="width:240px; border-radius:6px;" />
-                                    <p class="description"><?php esc_html_e('Prefix used when customers enter order reference during payment (e.g. RP-10492).', 'royalpay'); ?></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><label><?php esc_html_e('Currency', 'royalpay'); ?></label></th>
-                                <td>
-                                    <strong>BDT (৳ - Bangladeshi Taka)</strong>
-                                    <p class="description"><?php esc_html_e('All financial calculations run on exact minor unit integers (1 BDT = 100 minor units).', 'royalpay'); ?></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><label><?php esc_html_e('Anti-Fraud Security', 'royalpay'); ?></label></th>
-                                <td>
-                                    <span class="rp-badge-active" style="padding:4px 10px; font-size:12px;">🛡️ <?php esc_html_e('Strict Sender Whitelist Active (16247, 16167, 16216, bKash, Nagad, Rocket)', 'royalpay'); ?></span>
-                                    <p class="description" style="margin-top:6px;"><?php esc_html_e('Zero amount-only approvals. SMS from personal numbers or unknown senders are automatically rejected.', 'royalpay'); ?></p>
-                                </td>
-                            </tr>
-                        </table>
+                    <!-- Segmented Modern Pill Tabs -->
+                    <div class="rp-modern-tabs-wrap">
+                        <button type="button" class="rp-tab-btn active" data-tab="tab-general">
+                            <span>⚙️</span> <?php esc_html_e('General Settings', 'royalpay'); ?>
+                        </button>
+                        <button type="button" class="rp-tab-btn" data-tab="tab-integrations">
+                            <span>🔌</span> <?php esc_html_e('Supported Plugins & Paid Status', 'royalpay'); ?>
+                        </button>
+                        <button type="button" class="rp-tab-btn" data-tab="tab-colors">
+                            <span>🎨</span> <?php esc_html_e('Theme & Brand Colors', 'royalpay'); ?>
+                        </button>
+                        <button type="button" class="rp-tab-btn" data-tab="tab-about">
+                            <span>🏢</span> <?php esc_html_e('About Royal Technologies', 'royalpay'); ?>
+                        </button>
                     </div>
 
-                    <!-- Tab 2: Supported Plugins & Paid Status -->
+                    <!-- ==============================================
+                         TAB 1: General Settings
+                         ============================================== -->
+                    <div id="tab-general" class="rp-tab-pane active">
+                        <div class="rp-settings-section">
+                            <div class="rp-section-header">
+                                <div class="rp-section-icon">💼</div>
+                                <div class="rp-section-title-wrap">
+                                    <h3><?php esc_html_e('Payment Processing & Order Reference', 'royalpay'); ?></h3>
+                                    <p><?php esc_html_e('Configure checkout invoice prefix and core financial parameters.', 'royalpay'); ?></p>
+                                </div>
+                            </div>
+
+                            <div class="rp-form-grid">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_ref_prefix">
+                                        <?php esc_html_e('Order Reference Prefix', 'royalpay'); ?>
+                                    </label>
+                                    <input type="text" name="royalpay_ref_prefix" id="royalpay_ref_prefix" value="<?php echo esc_attr($refPrefix); ?>" class="rp-input" placeholder="e.g. RP-" required />
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Prefix used when customers enter order reference during payment (e.g. RP-10492).', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label">
+                                        <?php esc_html_e('Operating Currency', 'royalpay'); ?>
+                                    </label>
+                                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; padding:10px 14px; font-weight:600; color:#0f172a; height:42px; display:flex; align-items:center; gap:8px;">
+                                        <span style="color:#059669; font-size:16px;">৳</span> BDT (Bangladeshi Taka)
+                                    </div>
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Calculated in exact minor units (1 BDT = 100 minor units) to prevent floating-point rounding errors.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rp-settings-section">
+                            <div class="rp-section-header">
+                                <div class="rp-section-icon">🛡️</div>
+                                <div class="rp-section-title-wrap">
+                                    <h3><?php esc_html_e('Anti-Fraud & Ingestion Policy', 'royalpay'); ?></h3>
+                                    <p><?php esc_html_e('Hardware and telecom-grade security filters built into Royal Pay.', 'royalpay'); ?></p>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; gap:14px;">
+                                <div style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px;">
+                                    <div>
+                                        <strong style="color:#0f172a; font-size:14px; display:block;">
+                                            <?php esc_html_e('Strict Telecom Sender Whitelist', 'royalpay'); ?>
+                                        </strong>
+                                        <span style="color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Only accepts verified SMS originating from official shortcodes: 16247, 16167, 16216, bKash, Nagad, Rocket.', 'royalpay'); ?>
+                                        </span>
+                                    </div>
+                                    <span class="rp-badge-active" style="padding:4px 12px; font-size:12px;">Active & Enforced</span>
+                                </div>
+
+                                <div style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px;">
+                                    <div>
+                                        <strong style="color:#0f172a; font-size:14px; display:block;">
+                                            <?php esc_html_e('Zero Amount-Only Approvals', 'royalpay'); ?>
+                                        </strong>
+                                        <span style="color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Every transaction requires an exact Transaction ID (TrxID) or valid reference match before unlocking orders.', 'royalpay'); ?>
+                                        </span>
+                                    </div>
+                                    <span class="rp-badge-active" style="padding:4px 12px; font-size:12px;">Active & Enforced</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==============================================
+                         TAB 2: Supported Plugins & Paid Status
+                         ============================================== -->
                     <div id="tab-integrations" class="rp-tab-pane">
-                        <p style="color:#4b5563; font-size:14px; margin-bottom:20px;">
-                            <?php esc_html_e('Select which plugins Royal Pay should automatically verify payments for, and choose the Paid Order Status to assign upon successful payment:', 'royalpay'); ?>
-                        </p>
+                        <div style="margin-bottom:24px;">
+                            <h3 style="margin:0; font-size:17px; font-weight:700; color:#0f172a;">
+                                <?php esc_html_e('Supported Plugin Integrations', 'royalpay'); ?>
+                            </h3>
+                            <p style="margin:4px 0 0; color:#64748b; font-size:13.5px;">
+                                <?php esc_html_e('Select which plugins Royal Pay should automatically verify payments for, and configure the Paid Order Status for each.', 'royalpay'); ?>
+                            </p>
+                        </div>
 
                         <!-- Card 1: WooCommerce -->
                         <div class="rp-integration-card">
                             <div class="rp-integration-header">
                                 <div class="rp-integration-info">
-                                    <div class="rp-integration-icon">🛒</div>
+                                    <div class="rp-integration-icon" style="background:#f5f3ff; border-color:#ddd6fe; color:#7c3aed;">
+                                        🛒
+                                    </div>
                                     <div>
-                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
-                                            WooCommerce
+                                        <h3 style="margin:0; font-size:16px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                                            WooCommerce Store
                                             <?php if ($isWcActive): ?>
                                                 <span class="rp-badge-active">🟢 <?php esc_html_e('Active & Connected', 'royalpay'); ?></span>
                                             <?php else: ?>
                                                 <span class="rp-badge-inactive">⚪ <?php esc_html_e('Not Installed / Inactive', 'royalpay'); ?></span>
                                             <?php endif; ?>
                                         </h3>
-                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automated payment gateway & instant verification for WooCommerce store checkout orders.', 'royalpay'); ?></p>
+                                        <p style="margin:2px 0 0; color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Automated checkout gateway & instant order verification for WooCommerce e-commerce stores.', 'royalpay'); ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div>
@@ -774,50 +841,57 @@ class AdminMenu {
                                 </div>
                             </div>
 
-                            <table class="form-table" style="margin-top:0;">
-                                <tr>
-                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Order Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span></label></th>
-                                    <td>
-                                        <select name="royalpay_wc_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
-                                            <?php
-                                            $cleanWcStatus = str_replace('wc-', '', $wcPaidStatus);
-                                            if (function_exists('wc_get_order_statuses')) {
-                                                $wcStatuses = wc_get_order_statuses();
-                                                foreach ($wcStatuses as $statusKey => $statusLabel) {
-                                                    $val = str_replace('wc-', '', $statusKey);
-                                                    echo '<option value="' . esc_attr($val) . '" ' . selected($cleanWcStatus, $val, false) . '>' . esc_html($statusLabel) . '</option>';
-                                                }
-                                            } else {
-                                                echo '<option value="processing" ' . selected($cleanWcStatus, 'processing', false) . '>' . esc_html__('Processing (Default for physical goods)', 'royalpay') . '</option>';
-                                                echo '<option value="completed" ' . selected($cleanWcStatus, 'completed', false) . '>' . esc_html__('Completed (For instant digital downloads / events)', 'royalpay') . '</option>';
-                                                echo '<option value="on-hold" ' . selected($cleanWcStatus, 'on-hold', false) . '>' . esc_html__('On-hold (Manual review required)', 'royalpay') . '</option>';
+                            <div class="rp-form-grid" style="margin-top:16px;">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_wc_paid_status">
+                                        <?php esc_html_e('Paid Order Status (পেমেন্ট নিশ্চিত হলে স্ট্যাটাস)', 'royalpay'); ?> <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <select name="royalpay_wc_paid_status" id="royalpay_wc_paid_status" class="rp-select">
+                                        <?php
+                                        $cleanWcStatus = str_replace('wc-', '', $wcPaidStatus);
+                                        if (function_exists('wc_get_order_statuses')) {
+                                            $wcStatuses = wc_get_order_statuses();
+                                            foreach ($wcStatuses as $statusKey => $statusLabel) {
+                                                $val = str_replace('wc-', '', $statusKey);
+                                                echo '<option value="' . esc_attr($val) . '" ' . selected($cleanWcStatus, $val, false) . '>' . esc_html($statusLabel) . '</option>';
                                             }
-                                            ?>
-                                        </select>
-                                        <p class="description"><?php esc_html_e('Status to assign to the WooCommerce order as soon as customer payment is matched and verified.', 'royalpay'); ?></p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><label><?php esc_html_e('Amount Mismatch / Review Status', 'royalpay'); ?></label></th>
-                                    <td>
-                                        <select name="royalpay_wc_unmatched_status" style="min-width:260px; height:38px; border-radius:6px;">
-                                            <option value="on-hold" <?php selected($wcUnmatchedStatus, 'on-hold'); ?>><?php esc_html_e('On-hold (Hold order for merchant review)', 'royalpay'); ?></option>
-                                            <option value="pending" <?php selected($wcUnmatchedStatus, 'pending'); ?>><?php esc_html_e('Pending Payment', 'royalpay'); ?></option>
-                                            <option value="failed" <?php selected($wcUnmatchedStatus, 'failed'); ?>><?php esc_html_e('Failed', 'royalpay'); ?></option>
-                                        </select>
-                                        <p class="description"><?php esc_html_e('Status to set if customer sends less than the order total.', 'royalpay'); ?></p>
-                                    </td>
-                                </tr>
-                            </table>
+                                        } else {
+                                            echo '<option value="processing" ' . selected($cleanWcStatus, 'processing', false) . '>' . esc_html__('Processing (Default for physical goods)', 'royalpay') . '</option>';
+                                            echo '<option value="completed" ' . selected($cleanWcStatus, 'completed', false) . '>' . esc_html__('Completed (For instant digital downloads / events)', 'royalpay') . '</option>';
+                                            echo '<option value="on-hold" ' . selected($cleanWcStatus, 'on-hold', false) . '>' . esc_html__('On-hold (Manual review required)', 'royalpay') . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Status to assign to WooCommerce orders immediately after customer TrxID and amount are matched.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_wc_unmatched_status">
+                                        <?php esc_html_e('Amount Mismatch / Review Status', 'royalpay'); ?>
+                                    </label>
+                                    <select name="royalpay_wc_unmatched_status" id="royalpay_wc_unmatched_status" class="rp-select">
+                                        <option value="on-hold" <?php selected($wcUnmatchedStatus, 'on-hold'); ?>><?php esc_html_e('On-hold (Hold order for merchant review)', 'royalpay'); ?></option>
+                                        <option value="pending" <?php selected($wcUnmatchedStatus, 'pending'); ?>><?php esc_html_e('Pending Payment', 'royalpay'); ?></option>
+                                        <option value="failed" <?php selected($wcUnmatchedStatus, 'failed'); ?>><?php esc_html_e('Failed', 'royalpay'); ?></option>
+                                    </select>
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Assigned when customer enters a valid TrxID but paid amount is lower than the order total.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Card 2: Royal BatchMate -->
                         <div class="rp-integration-card">
                             <div class="rp-integration-header">
                                 <div class="rp-integration-info">
-                                    <div class="rp-integration-icon">🎓</div>
+                                    <div class="rp-integration-icon" style="background:#eff6ff; border-color:#bfdbfe; color:#2563eb;">
+                                        🎓
+                                    </div>
                                     <div>
-                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                        <h3 style="margin:0; font-size:16px; color:#0f172a; display:flex; align-items:center; gap:8px;">
                                             Royal BatchMate (Alumni / Events / Memberships)
                                             <?php if ($isBatchmateActive): ?>
                                                 <span class="rp-badge-active">🟢 <?php esc_html_e('Active & Connected', 'royalpay'); ?></span>
@@ -825,7 +899,9 @@ class AdminMenu {
                                                 <span class="rp-badge-inactive">⚪ <?php esc_html_e('Not Installed / Inactive', 'royalpay'); ?></span>
                                             <?php endif; ?>
                                         </h3>
-                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automatic approval for reunion event registrations, batch memberships, and fee verification.', 'royalpay'); ?></p>
+                                        <p style="margin:2px 0 0; color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Automatic event ticket and registration fee verification with instant approval and serial number issuance.', 'royalpay'); ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div>
@@ -836,54 +912,64 @@ class AdminMenu {
                                 </div>
                             </div>
 
-                            <table class="form-table" style="margin-top:0;">
-                                <tr>
-                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Application Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span></label></th>
-                                    <td>
-                                        <select name="royalpay_batchmate_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
-                                            <option value="approved" <?php selected($bmPaidStatus, 'approved'); ?>><?php esc_html_e('Approved (Default - Automatically confirms applicant)', 'royalpay'); ?></option>
-                                            <option value="confirmed" <?php selected($bmPaidStatus, 'confirmed'); ?>><?php esc_html_e('Confirmed', 'royalpay'); ?></option>
-                                            <option value="verified" <?php selected($bmPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
-                                        </select>
-                                        <p class="description"><?php esc_html_e('Status to assign to the event application when TrxID and amount match.', 'royalpay'); ?></p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><label><?php esc_html_e('Event Member Serial Number', 'royalpay'); ?></label></th>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="royalpay_batchmate_auto_serial" value="1" <?php checked($bmAutoSerial, '1'); ?> />
-                                            <?php esc_html_e('Automatically calculate and issue the next sequential Serial No in event members list.', 'royalpay'); ?>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><label><?php esc_html_e('Confirmation Email', 'royalpay'); ?></label></th>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="royalpay_batchmate_send_email" value="1" <?php checked($bmSendEmail, '1'); ?> />
-                                            <?php esc_html_e('Automatically send official confirmation email to the applicant upon successful verification.', 'royalpay'); ?>
-                                        </label>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="rp-form-grid" style="margin-top:16px;">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_batchmate_paid_status">
+                                        <?php esc_html_e('Paid Application Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <select name="royalpay_batchmate_paid_status" id="royalpay_batchmate_paid_status" class="rp-select">
+                                        <option value="approved" <?php selected($bmPaidStatus, 'approved'); ?>><?php esc_html_e('Approved (Default - Automatically confirms applicant)', 'royalpay'); ?></option>
+                                        <option value="confirmed" <?php selected($bmPaidStatus, 'confirmed'); ?>><?php esc_html_e('Confirmed', 'royalpay'); ?></option>
+                                        <option value="verified" <?php selected($bmPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
+                                    </select>
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Status to assign to event applications upon successful MFS verification.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group" style="justify-content:center;">
+                                    <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600; font-size:13.5px; color:#1e293b; margin-bottom:8px;">
+                                        <input type="checkbox" name="royalpay_batchmate_auto_serial" value="1" <?php checked($bmAutoSerial, '1'); ?> style="margin-top:2px;" />
+                                        <span>
+                                            <?php esc_html_e('Auto Issue Serial Number', 'royalpay'); ?>
+                                            <span style="display:block; font-weight:400; font-size:12px; color:#64748b; margin-top:2px;">
+                                                <?php esc_html_e('Calculates next sequential serial number and inserts row into event_members table.', 'royalpay'); ?>
+                                            </span>
+                                        </span>
+                                    </label>
+
+                                    <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600; font-size:13.5px; color:#1e293b;">
+                                        <input type="checkbox" name="royalpay_batchmate_send_email" value="1" <?php checked($bmSendEmail, '1'); ?> style="margin-top:2px;" />
+                                        <span>
+                                            <?php esc_html_e('Send Confirmation Email', 'royalpay'); ?>
+                                            <span style="display:block; font-weight:400; font-size:12px; color:#64748b; margin-top:2px;">
+                                                <?php esc_html_e('Automatically dispatch official confirmation email with ticket details to applicant.', 'royalpay'); ?>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Card 3: Royal Donation -->
                         <div class="rp-integration-card">
                             <div class="rp-integration-header">
                                 <div class="rp-integration-info">
-                                    <div class="rp-integration-icon">❤️</div>
+                                    <div class="rp-integration-icon" style="background:#fff1f2; border-color:#fecdd3; color:#e11d48;">
+                                        ❤️
+                                    </div>
                                     <div>
-                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
-                                            Royal Donation (Fund & Charity Collection)
+                                        <h3 style="margin:0; font-size:16px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                                            Royal Donation (Charity & Fund Collection)
                                             <?php if ($isDonationActive): ?>
                                                 <span class="rp-badge-active">🟢 <?php esc_html_e('Installed', 'royalpay'); ?></span>
                                             <?php else: ?>
                                                 <span class="rp-badge-inactive">⚪ <?php esc_html_e('Available Integration', 'royalpay'); ?></span>
                                             <?php endif; ?>
                                         </h3>
-                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automatic verification and receipt confirmation for charitable contributions and funds.', 'royalpay'); ?></p>
+                                        <p style="margin:2px 0 0; color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Automatic verification and donor receipt confirmation for charitable contributions and funds.', 'royalpay'); ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div>
@@ -894,29 +980,33 @@ class AdminMenu {
                                 </div>
                             </div>
 
-                            <table class="form-table" style="margin-top:0;">
-                                <tr>
-                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Donation Status', 'royalpay'); ?></label></th>
-                                    <td>
-                                        <select name="royalpay_donation_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
-                                            <option value="completed" <?php selected($donationPaidStatus, 'completed'); ?>><?php esc_html_e('Completed (Default)', 'royalpay'); ?></option>
-                                            <option value="verified" <?php selected($donationPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="rp-form-grid" style="margin-top:16px;">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_donation_paid_status">
+                                        <?php esc_html_e('Paid Donation Status', 'royalpay'); ?>
+                                    </label>
+                                    <select name="royalpay_donation_paid_status" id="royalpay_donation_paid_status" class="rp-select" style="max-width:320px;">
+                                        <option value="completed" <?php selected($donationPaidStatus, 'completed'); ?>><?php esc_html_e('Completed (Default)', 'royalpay'); ?></option>
+                                        <option value="verified" <?php selected($donationPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Card 4: Webhook Notification -->
                         <div class="rp-integration-card">
                             <div class="rp-integration-header">
                                 <div class="rp-integration-info">
-                                    <div class="rp-integration-icon">🌐</div>
+                                    <div class="rp-integration-icon" style="background:#ecfdf5; border-color:#a7f3d0; color:#059669;">
+                                        🌐
+                                    </div>
                                     <div>
-                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                        <h3 style="margin:0; font-size:16px; color:#0f172a; display:flex; align-items:center; gap:8px;">
                                             External Webhook / REST Notification
                                         </h3>
-                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Send real-time JSON POST webhook payloads to your CRM, ERP, or external apps when payment is verified.', 'royalpay'); ?></p>
+                                        <p style="margin:2px 0 0; color:#64748b; font-size:13px;">
+                                            <?php esc_html_e('Dispatch instant JSON payloads to your external CRM, ERP, or web app when transactions are verified.', 'royalpay'); ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div>
@@ -927,92 +1017,189 @@ class AdminMenu {
                                 </div>
                             </div>
 
-                            <table class="form-table" style="margin-top:0;">
-                                <tr>
-                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Webhook Endpoint URL', 'royalpay'); ?></label></th>
-                                    <td>
-                                        <input type="url" name="royalpay_webhook_url" value="<?php echo esc_attr($webhookUrl); ?>" placeholder="https://example.com/api/payment-webhook" class="regular-text" style="width:100%; max-width:480px; border-radius:6px;" />
-                                        <p class="description"><?php esc_html_e('Instant JSON payload containing Transaction ID, Provider, Amount, Order ID, and Timestamp will be dispatched.', 'royalpay'); ?></p>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="rp-form-group" style="margin-top:16px;">
+                                <label class="rp-form-label" for="royalpay_webhook_url">
+                                    <?php esc_html_e('Webhook Endpoint URL', 'royalpay'); ?>
+                                </label>
+                                <input type="url" name="royalpay_webhook_url" id="royalpay_webhook_url" value="<?php echo esc_attr($webhookUrl); ?>" placeholder="https://your-crm.com/api/royalpay-webhook" class="rp-input" />
+                                <p class="rp-form-desc">
+                                    <?php esc_html_e('Webhook receives POST request containing Transaction ID, Provider, Amount, Order ID, and Timestamp upon match.', 'royalpay'); ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Tab 3: Theme & Colors -->
+                    <!-- ==============================================
+                         TAB 3: Theme & Brand Colors
+                         ============================================== -->
                     <div id="tab-colors" class="rp-tab-pane">
-                        <h3><?php esc_html_e('Quick Color Presets', 'royalpay'); ?></h3>
-                        <p class="description" style="margin-bottom:14px;"><?php esc_html_e('Click any preset to apply brand theme colors across the header and buttons:', 'royalpay'); ?></p>
-
-                        <div style="display:flex; gap:14px; margin-bottom:24px;">
-                            <div class="rp-color-preset" data-primary="#4F46E5" data-dark="#3730A3" style="background:linear-gradient(135deg, #4F46E5, #3730A3);" title="Royal Indigo"></div>
-                            <div class="rp-color-preset" data-primary="#667EEA" data-dark="#764BA2" style="background:linear-gradient(135deg, #667EEA, #764BA2);" title="Royal Sentinel Purple"></div>
-                            <div class="rp-color-preset" data-primary="#10B981" data-dark="#059669" style="background:linear-gradient(135deg, #10B981, #059669);" title="Emerald Green"></div>
-                            <div class="rp-color-preset" data-primary="#E11D48" data-dark="#9F1239" style="background:linear-gradient(135deg, #E11D48, #9F1239);" title="Crimson Rose"></div>
-                            <div class="rp-color-preset" data-primary="#2C3E50" data-dark="#1A252F" style="background:linear-gradient(135deg, #2C3E50, #1A252F);" title="Cyber Slate"></div>
-                        </div>
-
-                        <table class="form-table">
-                            <tr>
-                                <th scope="row"><label><?php esc_html_e('Primary Brand Color', 'royalpay'); ?></label></th>
-                                <td>
-                                    <input type="text" name="royalpay_primary_color" id="royalpay_primary_color" value="<?php echo esc_attr($primaryColor); ?>" class="rp-color-picker" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><label><?php esc_html_e('Gradient Dark Color', 'royalpay'); ?></label></th>
-                                <td>
-                                    <input type="text" name="royalpay_primary_dark" id="royalpay_primary_dark" value="<?php echo esc_attr($primaryDark); ?>" class="rp-color-picker" />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <!-- Tab 4: About Company & System Info -->
-                    <div id="tab-about" class="rp-tab-pane">
-                        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:24px; max-width:650px;">
-                            <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
-                                <div style="font-size:36px;">👑</div>
-                                <div>
-                                    <h2 style="margin:0; font-size:20px; color:#111827;">Royal Technologies</h2>
-                                    <p style="margin:2px 0 0; color:#6b7280; font-size:13px;">Creator & Publisher of Royal Pay Automation</p>
+                        <div class="rp-settings-section">
+                            <div class="rp-section-header">
+                                <div class="rp-section-icon">🎨</div>
+                                <div class="rp-section-title-wrap">
+                                    <h3><?php esc_html_e('Interactive Brand Theme Palettes', 'royalpay'); ?></h3>
+                                    <p><?php esc_html_e('Select any designer palette below to instantly style the animated header, action buttons, and badges.', 'royalpay'); ?></p>
                                 </div>
                             </div>
 
-                            <table style="width:100%; border-collapse:collapse; font-size:14px; margin-top:12px;">
-                                <tr style="border-bottom:1px solid #e5e7eb;">
-                                    <td style="padding:10px 0; color:#6b7280; width:140px;"><strong>📞 Helpline:</strong></td>
-                                    <td style="padding:10px 0; color:#111827; font-weight:600;">01552333272</td>
-                                </tr>
-                                <tr style="border-bottom:1px solid #e5e7eb;">
-                                    <td style="padding:10px 0; color:#6b7280;"><strong>🏢 Address:</strong></td>
-                                    <td style="padding:10px 0; color:#111827;">D - 408, Housing Estate, Kushtia</td>
-                                </tr>
-                                <tr style="border-bottom:1px solid #e5e7eb;">
-                                    <td style="padding:10px 0; color:#6b7280;"><strong>🌐 Website:</strong></td>
-                                    <td style="padding:10px 0; color:#111827;"><a href="https://www.royaltechbd.com" target="_blank" style="color:#4f46e5; text-decoration:none; font-weight:600;">https://www.royaltechbd.com</a></td>
-                                </tr>
-                                <tr style="border-bottom:1px solid #e5e7eb;">
-                                    <td style="padding:10px 0; color:#6b7280;"><strong>🛡️ License Status:</strong></td>
-                                    <td style="padding:10px 0;">
-                                        <span class="status-badge status-<?php echo $isLicensed ? 'matched' : 'review_required'; ?>">
-                                            <?php echo $isLicensed ? 'Active & Verified (RoyalAuth v2.0)' : 'Inactive / Unlicensed'; ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:10px 0; color:#6b7280;"><strong>📦 Version:</strong></td>
-                                    <td style="padding:10px 0; color:#111827;">v<?php echo esc_html(ROYALPAY_VERSION); ?></td>
-                                </tr>
-                            </table>
+                            <div class="rp-palette-grid">
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#4F46E5') ? 'active' : ''; ?>" data-primary="#4F46E5" data-dark="#3730A3">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Royal Indigo</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#667EEA') ? 'active' : ''; ?>" data-primary="#667EEA" data-dark="#764BA2">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #667EEA 0%, #764BA2 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Sentinel Purple</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#10B981') ? 'active' : ''; ?>" data-primary="#10B981" data-dark="#059669">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #10B981 0%, #059669 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Emerald Pay</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#E11D48') ? 'active' : ''; ?>" data-primary="#E11D48" data-dark="#9F1239">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #E11D48 0%, #9F1239 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Crimson Rose</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#2C3E50') ? 'active' : ''; ?>" data-primary="#2C3E50" data-dark="#1A252F">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #2C3E50 0%, #1A252F 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Cyber Slate</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+
+                                <div class="rp-palette-card <?php echo ($primaryColor === '#D97706') ? 'active' : ''; ?>" data-primary="#D97706" data-dark="#B45309">
+                                    <div class="rp-palette-preview" style="background:linear-gradient(135deg, #D97706 0%, #B45309 100%);"></div>
+                                    <div class="rp-palette-details">
+                                        <span class="rp-palette-name">Imperial Amber</span>
+                                        <span class="rp-palette-check">✔</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rp-settings-section">
+                            <div class="rp-section-header">
+                                <div class="rp-section-icon">🖌️</div>
+                                <div class="rp-section-title-wrap">
+                                    <h3><?php esc_html_e('Custom Hex Color Codes', 'royalpay'); ?></h3>
+                                    <p><?php esc_html_e('Specify custom branding colors for the gradient headers and elements.', 'royalpay'); ?></p>
+                                </div>
+                            </div>
+
+                            <div class="rp-form-grid">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_primary_color">
+                                        <?php esc_html_e('Primary Brand Color', 'royalpay'); ?>
+                                    </label>
+                                    <input type="text" name="royalpay_primary_color" id="royalpay_primary_color" value="<?php echo esc_attr($primaryColor); ?>" class="rp-color-picker" />
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label" for="royalpay_primary_dark">
+                                        <?php esc_html_e('Gradient Dark Accent Color', 'royalpay'); ?>
+                                    </label>
+                                    <input type="text" name="royalpay_primary_dark" id="royalpay_primary_dark" value="<?php echo esc_attr($primaryDark); ?>" class="rp-color-picker" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <p class="submit" style="margin-top:24px;">
-                        <button type="submit" name="royalpay_save_settings" class="button button-primary" style="height:42px; padding:0 24px;">
-                            <?php esc_html_e('Save Changes', 'royalpay'); ?>
+                    <!-- ==============================================
+                         TAB 4: About Company & System Info
+                         ============================================== -->
+                    <div id="tab-about" class="rp-tab-pane">
+                        <div class="rp-about-hero">
+                            <div class="rp-about-hero-content">
+                                <div class="rp-about-avatar">👑</div>
+                                <div>
+                                    <h2>Royal Technologies</h2>
+                                    <p>Architects & Publishers of Royal Pay Automation Suite</p>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span class="rp-version-badge" style="background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.25);">
+                                    v<?php echo esc_html(ROYALPAY_VERSION); ?>
+                                </span>
+                                <span class="rp-version-badge" style="background:#10b981; border-color:#059669; color:#ffffff;">
+                                    <?php echo $isLicensed ? '🛡️ RoyalAuth Active' : '⚠️ Unlicensed'; ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="rp-about-grid">
+                            <div class="rp-about-card">
+                                <div class="rp-about-card-icon">📞</div>
+                                <h4><?php esc_html_e('Support Helpline', 'royalpay'); ?></h4>
+                                <p style="font-size:16px; font-weight:700; color:#0f172a; margin-bottom:8px;">
+                                    <a href="tel:01552333272" style="color:#0f172a; text-decoration:none;">01552333272</a>
+                                </p>
+                                <p style="font-size:12.5px; color:#64748b;">
+                                    <?php esc_html_e('Direct phone & WhatsApp assistance for merchant setup & technical verification.', 'royalpay'); ?>
+                                </p>
+                            </div>
+
+                            <div class="rp-about-card">
+                                <div class="rp-about-card-icon">🏢</div>
+                                <h4><?php esc_html_e('Registered Office', 'royalpay'); ?></h4>
+                                <p style="font-weight:600; color:#0f172a; margin-bottom:8px;">
+                                    D - 408, Housing Estate, Kushtia
+                                </p>
+                                <p style="font-size:12.5px; color:#64748b;">
+                                    <?php esc_html_e('Official engineering and customer support facility in Bangladesh.', 'royalpay'); ?>
+                                </p>
+                            </div>
+
+                            <div class="rp-about-card">
+                                <div class="rp-about-card-icon">🌐</div>
+                                <h4><?php esc_html_e('Official Portal', 'royalpay'); ?></h4>
+                                <p style="font-weight:600; margin-bottom:8px;">
+                                    <a href="https://www.royaltechbd.com" target="_blank" style="color:var(--rp-primary); text-decoration:none;">
+                                        www.royaltechbd.com ↗
+                                    </a>
+                                </p>
+                                <p style="font-size:12.5px; color:#64748b;">
+                                    <?php esc_html_e('Product documentation, knowledge base, release notes, and downloads.', 'royalpay'); ?>
+                                </p>
+                            </div>
+
+                            <div class="rp-about-card">
+                                <div class="rp-about-card-icon">🛡️</div>
+                                <h4><?php esc_html_e('RoyalAuth v2.0 Security', 'royalpay'); ?></h4>
+                                <p style="font-weight:600; color:#059669; margin-bottom:8px;">
+                                    <?php echo $isLicensed ? esc_html__('Ed25519 Cryptographic Verification Active', 'royalpay') : esc_html__('License Inactive', 'royalpay'); ?>
+                                </p>
+                                <p style="font-size:12.5px; color:#64748b;">
+                                    <?php esc_html_e('Local-first tamper-proof verification resilient against server downtime.', 'royalpay'); ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modern Bottom Save Bar -->
+                    <div class="rp-save-bar">
+                        <div style="color:#64748b; font-size:13px;">
+                            <?php esc_html_e('Changes take effect immediately across all checkout gateways and automation hooks.', 'royalpay'); ?>
+                        </div>
+                        <button type="submit" name="royalpay_save_settings" class="rp-btn-save">
+                            <span>💾</span> <?php esc_html_e('Save Changes', 'royalpay'); ?>
                         </button>
-                    </p>
+                    </div>
                 </form>
             </div>
         </div>
