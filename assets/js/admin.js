@@ -8,13 +8,21 @@
 
         // 1. DataTables Initialization
         if ($.fn.DataTable) {
-            $('.royalpay-datatable').DataTable({
-                responsive: true,
-                pageLength: 25,
-                order: [],
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search records..."
+            $('.royalpay-datatable').each(function() {
+                if (!$.fn.DataTable.isDataTable(this)) {
+                    $(this).DataTable({
+                        responsive: true,
+                        pageLength: 25,
+                        order: [],
+                        language: {
+                            search: "",
+                            searchPlaceholder: "Search records...",
+                            lengthMenu: "_MENU_ entries per page",
+                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                            infoEmpty: "No records found",
+                            emptyTable: "No data available in table"
+                        }
+                    });
                 }
             });
         }
