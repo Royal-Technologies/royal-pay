@@ -44,6 +44,13 @@ spl_autoload_register(function ($class) {
 });
 
 /**
+ * Load plugin text domain for internationalization
+ */
+add_action('init', function () {
+    load_plugin_textdomain('royalpay', false, dirname(plugin_basename(__FILE__)) . '/languages');
+});
+
+/**
  * Declare WooCommerce High-Performance Order Storage (HPOS) compatibility.
  */
 add_action('before_woocommerce_init', function () {

@@ -1,0 +1,193 @@
+# Copyright (C) 2026 Royal Technologies
+# This file is distributed under the same license as the Royal Pay plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Royal Pay 1.0.0\n"
+"Report-Msgid-Bugs-To: info@royaltechbd.com\n"
+"POT-Creation-Date: 2026-11-11 17:35+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Royal Technologies <info@royaltechbd.com>\n"
+"Language-Team: Bengali <info@royaltechbd.com>\n"
+"Language: bn_BD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Royal Technologies\n"
+"X-Domain: royalpay\n"
+
+#: royal-pay.php:5
+msgid "Automated MFS Payment Gateway (bKash, Nagad, Rocket) for WooCommerce with Android SMS sync and instant order verification by Royal Technologies."
+msgstr ""
+
+#: royal-pay.php:93
+msgid "Every Minute"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:55
+#: includes/Admin/AdminMenu.php:56
+msgid "Royal Pay"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:68
+#: includes/Admin/AdminMenu.php:69
+#: includes/Admin/AdminMenu.php:134
+#: includes/Admin/AdminMenu.php:135
+#: includes/Core/Plugin.php:141
+msgid "License"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:80
+#: includes/Admin/AdminMenu.php:81
+msgid "Dashboard"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:89
+#: includes/Admin/AdminMenu.php:90
+msgid "Wallets"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:98
+#: includes/Admin/AdminMenu.php:99
+msgid "Devices"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:107
+#: includes/Admin/AdminMenu.php:108
+msgid "Transactions"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:116
+#: includes/Admin/AdminMenu.php:117
+msgid "SMS Logs"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:125
+#: includes/Admin/AdminMenu.php:126
+#: includes/Core/Plugin.php:140
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:169
+msgid "Permission denied."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:196
+msgid "License deactivated successfully."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:215
+msgid "Settings saved successfully."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:222
+msgid "Wallet saved successfully."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:260
+msgid "Payment Automation Dashboard"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:260
+msgid "Real-time transaction intelligence and automated MFS verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:347
+msgid "MFS Wallets Configuration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:347
+msgid "Configure bKash, Nagad, and Rocket numbers and accounts."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:446
+msgid "Android Agent Devices"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:446
+msgid "Manage connected smartphones running Royal Pay Agent APK."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:535
+msgid "Transactions Ledger"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:535
+msgid "Complete ledger of ingested transactions with DataTables search and filter."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:589
+msgid "Incoming SMS Logs"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:589
+msgid "Raw telecom messages captured by Android Agent with parser audit."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:648
+msgid "Royal Pay Settings & Configuration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:648
+msgid "Manage theme colors, gateway preferences, and company information."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:776
+msgid "Royal Pay License Activation"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:776
+msgid "RoyalTechBD Resilient Local-First Architecture with Ed25519 signature verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:781
+msgid "RoyalAuth v2.0 License Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:783
+msgid "Verify your license key issued by Royal Technologies to enable automated payment verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:790
+msgid "License Active & Verified"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:790
+msgid "License Inactive / Not Activated"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:798
+msgid "Enter your license key provided by Royal Technologies to activate."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:809
+msgid "RoyalTechBD License Key:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:816
+msgid "Activate License"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:828
+msgid "Active License Key:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:835
+msgid "Deactivate License"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:32
+msgid "bKash, Nagad & Rocket (Auto Verification)"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:33
+msgid "Pay securely via bKash, Nagad, or Rocket personal/merchant and get instant verification."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:124
+msgid "Please select a payment method and enter the Transaction ID (TrxID)."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:131
+msgid "The Transaction ID must be at least 6 alphanumeric characters."
+msgstr ""
