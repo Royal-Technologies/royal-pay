@@ -27,19 +27,53 @@ class AdminMenu {
     public function init(): void {
         add_action('admin_menu', [$this, 'registerMenus']);
         add_action('admin_init', [$this, 'handleFormSubmissions']);
+        add_action('admin_init', [$this, 'checkLicenseRedirect']);
+    }
+
+    /**
+     * Redirect to license page if license is not active and user tries to access other Royal Pay pages
+     */
+    public function checkLicenseRedirect(): void {
+        $is_licensed = LicenseManager::getInstance()->isLicensed();
+        if ($is_licensed) {
+            return;
+        }
+
+        $current_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
+        if (strpos($current_page, 'royalpay') === 0 && $current_page !== 'royalpay') {
+            wp_safe_redirect(admin_url('admin.php?page=royalpay'));
+            exit;
+        }
     }
 
     public function registerMenus(): void {
+        $is_licensed = LicenseManager::getInstance()->isLicensed();
+
+        // 1. Main Menu (Parent)
         add_menu_page(
             __('Royal Pay', 'royalpay'),
             __('Royal Pay', 'royalpay'),
             'manage_woocommerce',
             'royalpay',
-            [$this, 'renderDashboard'],
+            $is_licensed ? [$this, 'renderDashboard'] : [$this, 'renderLicense'],
             'dashicons-money-alt',
             56
         );
 
+        // যদি লাইসেন্স না থাকে, তাহলে শুধুমাত্র লাইসেন্স পেজ দেখাবে — আর কোন মেনু দেখাবে না
+        if (!$is_licensed) {
+            add_submenu_page(
+                'royalpay',
+                __('License', 'royalpay'),
+                __('License', 'royalpay'),
+                'manage_woocommerce',
+                'royalpay',
+                [$this, 'renderLicense']
+            );
+            return; // অন্য কোন মেনু দেখাবে না
+        }
+
+        // লাইসেন্স একটিভ থাকলে সব মেনু দেখাবে
         add_submenu_page(
             'royalpay',
             __('Dashboard', 'royalpay'),
