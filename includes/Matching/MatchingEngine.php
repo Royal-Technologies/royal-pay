@@ -46,24 +46,29 @@ class MatchingEngine {
         $candidateOrderId = null;
         $matchRule = null;
 
-        if (!empty($reference)) {
-            $candidateOrderId = self::findOrderMatchingReference($reference, $amountMinor);
-            if ($candidateOrderId) {
-                $matchRule = 'exact_ref_trxid';
-            }
-        }
+        $enableWooCommerce = get_option('royalpay_enable_woocommerce', '1') == '1';
 
-        // Rule B: Order where customer entered this exact TrxID
-        if (!$candidateOrderId) {
-            $candidateOrderId = self::findOrderMatchingTrxId($trxId, $provider, $amountMinor);
-            if ($candidateOrderId) {
-                $matchRule = 'exact_trxid';
+        if ($enableWooCommerce && function_exists('wc_get_orders')) {
+            if (!empty($reference)) {
+                $candidateOrderId = self::findOrderMatchingReference($reference, $amountMinor);
+                if ($candidateOrderId) {
+                    $matchRule = 'exact_ref_trxid';
+                }
+            }
+
+            // Rule B: Order where customer entered this exact TrxID
+            if (!$candidateOrderId) {
+                $candidateOrderId = self::findOrderMatchingTrxId($trxId, $provider, $amountMinor);
+                if ($candidateOrderId) {
+                    $matchRule = 'exact_trxid';
+                }
             }
         }
 
         if (!$candidateOrderId) {
             // Rule C: Royal BatchMate Event Application Integration
-            if (\RoyalPay\Compatibility\RoyalBatchmateAdapter::isBatchmateActive()) {
+            $enableBatchmate = get_option('royalpay_enable_batchmate', '1') == '1';
+            if ($enableBatchmate && \RoyalPay\Compatibility\RoyalBatchmateAdapter::isBatchmateActive()) {
                 $batchmateResult = \RoyalPay\Compatibility\RoyalBatchmateAdapter::matchEventApplication(
                     $trxId,
                     $provider,
@@ -137,6 +142,13 @@ class MatchingEngine {
             if ($orderTotalMinor !== $amountMinor) {
                 $wpdb->query("ROLLBACK");
                 $wpdb->update($txnTable, ['status' => 'review_required'], ['id' => $transactionId]);
+
+                $unmatchedStatus = get_option('royalpay_wc_unmatched_status', 'on-hold');
+                $cleanUnmatched  = str_replace('wc-', '', $unmatchedStatus);
+                if (!empty($cleanUnmatched) && $order->get_status() !== $cleanUnmatched) {
+                    $order->update_status($cleanUnmatched);
+                }
+
                 $order->add_order_note(sprintf(
                     __('Royal Pay: Transaction received (%s %s) but amount does not match order total (%s). Flagged for review.', 'royalpay'),
                     Security::fromMinorUnits($amountMinor),
@@ -169,8 +181,15 @@ class MatchingEngine {
             // Update transaction status to matched
             $wpdb->update($txnTable, ['status' => 'matched'], ['id' => $transactionId]);
 
-            // Complete WooCommerce order using official CRUD APIs
+            // Complete WooCommerce order using configured paid status
+            $configuredPaidStatus = get_option('royalpay_wc_paid_status', get_option('royalpay_auto_status', 'processing'));
+            $cleanPaidStatus      = str_replace('wc-', '', $configuredPaidStatus);
+
             $order->payment_complete($trxId);
+            if (!empty($cleanPaidStatus) && $cleanPaidStatus !== 'processing' && $cleanPaidStatus !== $order->get_status()) {
+                $order->update_status($cleanPaidStatus, sprintf(__('Royal Pay: Payment verified (%s). Status set to %s per integration settings.', 'royalpay'), $trxId, $cleanPaidStatus));
+            }
+
             $order->update_meta_data('_royalpay_provider', $provider);
             $order->update_meta_data('_royalpay_trxid', $trxId);
             $order->update_meta_data('_royalpay_matched_at', $now);
@@ -186,6 +205,28 @@ class MatchingEngine {
             ));
 
             $wpdb->query("COMMIT");
+
+            // External Webhook Notification if enabled
+            if (get_option('royalpay_enable_webhook', '0') == '1') {
+                $webhookUrl = get_option('royalpay_webhook_url', '');
+                if (!empty($webhookUrl)) {
+                    wp_remote_post($webhookUrl, [
+                        'timeout'   => 5,
+                        'blocking'  => false,
+                        'headers'   => ['Content-Type' => 'application/json'],
+                        'body'      => json_encode([
+                            'event'          => 'payment.matched',
+                            'source'         => 'woocommerce',
+                            'order_id'       => $candidateOrderId,
+                            'transaction_id' => $trxId,
+                            'provider'       => $provider,
+                            'amount'         => Security::fromMinorUnits($amountMinor),
+                            'status'         => $cleanPaidStatus,
+                            'timestamp'      => $now,
+                        ]),
+                    ]);
+                }
+            }
 
             AuditLogger::log('payment_matched', 'order', $candidateOrderId, [
                 'transaction_id' => $transactionId,

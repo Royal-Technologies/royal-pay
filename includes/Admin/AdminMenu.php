@@ -203,15 +203,49 @@ class AdminMenu {
         if (isset($_POST['royalpay_save_settings'])) {
             check_admin_referer('royalpay_settings_action', 'royalpay_settings_nonce');
 
+            // 1. General & Brand Colors
             $primaryColor = sanitize_hex_color($_POST['royalpay_primary_color'] ?? '#4F46E5');
             $primaryDark  = sanitize_hex_color($_POST['royalpay_primary_dark'] ?? '#3730A3');
             $refPrefix    = sanitize_text_field($_POST['royalpay_ref_prefix'] ?? 'RP-');
-            $autoStatus   = sanitize_text_field($_POST['royalpay_auto_status'] ?? 'processing');
 
             update_option('royalpay_primary_color', $primaryColor);
             update_option('royalpay_primary_dark', $primaryDark);
             update_option('royalpay_ref_prefix', $refPrefix);
-            update_option('royalpay_auto_status', $autoStatus);
+
+            // 2. WooCommerce Integration
+            $enableWc      = isset($_POST['royalpay_enable_woocommerce']) ? '1' : '0';
+            $wcPaidStatus  = sanitize_text_field($_POST['royalpay_wc_paid_status'] ?? 'processing');
+            $wcUnmatched   = sanitize_text_field($_POST['royalpay_wc_unmatched_status'] ?? 'on-hold');
+
+            update_option('royalpay_enable_woocommerce', $enableWc);
+            update_option('royalpay_wc_paid_status', $wcPaidStatus);
+            update_option('royalpay_auto_status', $wcPaidStatus); // Backwards compatibility
+            update_option('royalpay_wc_unmatched_status', $wcUnmatched);
+
+            // 3. Royal BatchMate Integration
+            $enableBm      = isset($_POST['royalpay_enable_batchmate']) ? '1' : '0';
+            $bmPaidStatus  = sanitize_text_field($_POST['royalpay_batchmate_paid_status'] ?? 'approved');
+            $bmAutoSerial  = isset($_POST['royalpay_batchmate_auto_serial']) ? '1' : '0';
+            $bmSendEmail   = isset($_POST['royalpay_batchmate_send_email']) ? '1' : '0';
+
+            update_option('royalpay_enable_batchmate', $enableBm);
+            update_option('royalpay_batchmate_paid_status', $bmPaidStatus);
+            update_option('royalpay_batchmate_auto_serial', $bmAutoSerial);
+            update_option('royalpay_batchmate_send_email', $bmSendEmail);
+
+            // 4. Royal Donation Integration
+            $enableDonation     = isset($_POST['royalpay_enable_donation']) ? '1' : '0';
+            $donationPaidStatus = sanitize_text_field($_POST['royalpay_donation_paid_status'] ?? 'completed');
+
+            update_option('royalpay_enable_donation', $enableDonation);
+            update_option('royalpay_donation_paid_status', $donationPaidStatus);
+
+            // 5. External Webhook Integration
+            $enableWebhook = isset($_POST['royalpay_enable_webhook']) ? '1' : '0';
+            $webhookUrl    = esc_url_raw($_POST['royalpay_webhook_url'] ?? '');
+
+            update_option('royalpay_enable_webhook', $enableWebhook);
+            update_option('royalpay_webhook_url', $webhookUrl);
 
             add_settings_error('royalpay_notices', 'settings_saved', __('Settings saved successfully.', 'royalpay'), 'updated');
         }
@@ -633,26 +667,48 @@ class AdminMenu {
     }
 
     /**
-     * Settings View with Instant Tabs: General, Theme & Colors, About
+     * Settings View with Instant Tabs: General, Integrations & Plugins, Theme & Colors, About
      */
     public function renderSettings(): void {
-        $primaryColor = get_option('royalpay_primary_color', '#4F46E5');
-        $primaryDark  = get_option('royalpay_primary_dark', '#3730A3');
-        $refPrefix    = get_option('royalpay_ref_prefix', 'RP-');
-        $autoStatus   = get_option('royalpay_auto_status', 'processing');
+        $primaryColor       = get_option('royalpay_primary_color', '#4F46E5');
+        $primaryDark        = get_option('royalpay_primary_dark', '#3730A3');
+        $refPrefix          = get_option('royalpay_ref_prefix', 'RP-');
 
-        $isLicensed   = LicenseManager::getInstance()->isLicensed();
-        $rawCache     = get_option('royalpay_license_cache', '');
-        $licenseData  = !empty($rawCache) ? json_decode($rawCache, true) : null;
+        // WooCommerce Options
+        $enableWc           = get_option('royalpay_enable_woocommerce', '1');
+        $wcPaidStatus       = get_option('royalpay_wc_paid_status', get_option('royalpay_auto_status', 'processing'));
+        $wcUnmatchedStatus  = get_option('royalpay_wc_unmatched_status', 'on-hold');
+        $isWcActive         = class_exists('WooCommerce');
+
+        // Royal BatchMate Options
+        $enableBatchmate    = get_option('royalpay_enable_batchmate', '1');
+        $bmPaidStatus       = get_option('royalpay_batchmate_paid_status', 'approved');
+        $bmAutoSerial       = get_option('royalpay_batchmate_auto_serial', '1');
+        $bmSendEmail        = get_option('royalpay_batchmate_send_email', '1');
+        $isBatchmateActive  = \RoyalPay\Compatibility\RoyalBatchmateAdapter::isBatchmateActive();
+
+        // Royal Donation Options
+        $enableDonation     = get_option('royalpay_enable_donation', '1');
+        $donationPaidStatus = get_option('royalpay_donation_paid_status', 'completed');
+        $isDonationActive   = defined('ROYAL_DONATION_VERSION') || file_exists(WP_PLUGIN_DIR . '/royal-donation/royal-donation.php');
+
+        // External Webhook Options
+        $enableWebhook      = get_option('royalpay_enable_webhook', '0');
+        $webhookUrl         = get_option('royalpay_webhook_url', '');
+
+        $isLicensed         = LicenseManager::getInstance()->isLicensed();
+        $rawCache           = get_option('royalpay_license_cache', '');
+        $licenseData        = !empty($rawCache) ? json_decode($rawCache, true) : null;
         ?>
         <div class="wrap royalpay-admin-wrap">
-            <?php self::renderHeader('⚙️', __('Royal Pay Settings & Configuration', 'royalpay'), __('Manage theme colors, gateway preferences, and company information.', 'royalpay')); ?>
+            <?php self::renderHeader('⚙️', __('Royal Pay Settings & Configuration', 'royalpay'), __('Manage supported plugins, paid order statuses, theme colors, and gateways.', 'royalpay')); ?>
             <?php settings_errors('royalpay_notices'); ?>
 
             <div class="royalpay-card" style="margin-top:20px;">
                 <!-- Instant Switching Client-side Tabs -->
                 <div class="rp-nav-tabs">
                     <button type="button" class="rp-tab-btn active" data-tab="tab-general">⚙️ <?php esc_html_e('General Settings', 'royalpay'); ?></button>
+                    <button type="button" class="rp-tab-btn" data-tab="tab-integrations">🔌 <?php esc_html_e('Supported Plugins & Paid Status', 'royalpay'); ?></button>
                     <button type="button" class="rp-tab-btn" data-tab="tab-colors">🎨 <?php esc_html_e('Theme & Colors', 'royalpay'); ?></button>
                     <button type="button" class="rp-tab-btn" data-tab="tab-about">🏢 <?php esc_html_e('About Royal Technologies', 'royalpay'); ?></button>
                 </div>
@@ -666,24 +722,224 @@ class AdminMenu {
                             <tr>
                                 <th scope="row"><label><?php esc_html_e('Order Reference Prefix', 'royalpay'); ?></label></th>
                                 <td>
-                                    <input type="text" name="royalpay_ref_prefix" value="<?php echo esc_attr($refPrefix); ?>" class="regular-text" />
+                                    <input type="text" name="royalpay_ref_prefix" value="<?php echo esc_attr($refPrefix); ?>" class="regular-text" style="width:240px; border-radius:6px;" />
                                     <p class="description"><?php esc_html_e('Prefix used when customers enter order reference during payment (e.g. RP-10492).', 'royalpay'); ?></p>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row"><label><?php esc_html_e('Paid Order Status', 'royalpay'); ?></label></th>
+                                <th scope="row"><label><?php esc_html_e('Currency', 'royalpay'); ?></label></th>
                                 <td>
-                                    <select name="royalpay_auto_status">
-                                        <option value="processing" <?php selected($autoStatus, 'processing'); ?>><?php esc_html_e('Processing (Default for physical goods)', 'royalpay'); ?></option>
-                                        <option value="completed" <?php selected($autoStatus, 'completed'); ?>><?php esc_html_e('Completed (For instant digital downloads / events)', 'royalpay'); ?></option>
-                                    </select>
-                                    <p class="description"><?php esc_html_e('Status to assign to WooCommerce orders once transaction verification succeeds.', 'royalpay'); ?></p>
+                                    <strong>BDT (৳ - Bangladeshi Taka)</strong>
+                                    <p class="description"><?php esc_html_e('All financial calculations run on exact minor unit integers (1 BDT = 100 minor units).', 'royalpay'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label><?php esc_html_e('Anti-Fraud Security', 'royalpay'); ?></label></th>
+                                <td>
+                                    <span class="rp-badge-active" style="padding:4px 10px; font-size:12px;">🛡️ <?php esc_html_e('Strict Sender Whitelist Active (16247, 16167, 16216, bKash, Nagad, Rocket)', 'royalpay'); ?></span>
+                                    <p class="description" style="margin-top:6px;"><?php esc_html_e('Zero amount-only approvals. SMS from personal numbers or unknown senders are automatically rejected.', 'royalpay'); ?></p>
                                 </td>
                             </tr>
                         </table>
                     </div>
 
-                    <!-- Tab 2: Theme & Colors -->
+                    <!-- Tab 2: Supported Plugins & Paid Status -->
+                    <div id="tab-integrations" class="rp-tab-pane">
+                        <p style="color:#4b5563; font-size:14px; margin-bottom:20px;">
+                            <?php esc_html_e('Select which plugins Royal Pay should automatically verify payments for, and choose the Paid Order Status to assign upon successful payment:', 'royalpay'); ?>
+                        </p>
+
+                        <!-- Card 1: WooCommerce -->
+                        <div class="rp-integration-card">
+                            <div class="rp-integration-header">
+                                <div class="rp-integration-info">
+                                    <div class="rp-integration-icon">🛒</div>
+                                    <div>
+                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                            WooCommerce
+                                            <?php if ($isWcActive): ?>
+                                                <span class="rp-badge-active">🟢 <?php esc_html_e('Active & Connected', 'royalpay'); ?></span>
+                                            <?php else: ?>
+                                                <span class="rp-badge-inactive">⚪ <?php esc_html_e('Not Installed / Inactive', 'royalpay'); ?></span>
+                                            <?php endif; ?>
+                                        </h3>
+                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automated payment gateway & instant verification for WooCommerce store checkout orders.', 'royalpay'); ?></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="rp-switch" title="<?php esc_attr_e('Enable or Disable WooCommerce Integration', 'royalpay'); ?>">
+                                        <input type="checkbox" name="royalpay_enable_woocommerce" value="1" <?php checked($enableWc, '1'); ?> />
+                                        <span class="rp-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <table class="form-table" style="margin-top:0;">
+                                <tr>
+                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Order Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span></label></th>
+                                    <td>
+                                        <select name="royalpay_wc_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
+                                            <?php
+                                            $cleanWcStatus = str_replace('wc-', '', $wcPaidStatus);
+                                            if (function_exists('wc_get_order_statuses')) {
+                                                $wcStatuses = wc_get_order_statuses();
+                                                foreach ($wcStatuses as $statusKey => $statusLabel) {
+                                                    $val = str_replace('wc-', '', $statusKey);
+                                                    echo '<option value="' . esc_attr($val) . '" ' . selected($cleanWcStatus, $val, false) . '>' . esc_html($statusLabel) . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="processing" ' . selected($cleanWcStatus, 'processing', false) . '>' . esc_html__('Processing (Default for physical goods)', 'royalpay') . '</option>';
+                                                echo '<option value="completed" ' . selected($cleanWcStatus, 'completed', false) . '>' . esc_html__('Completed (For instant digital downloads / events)', 'royalpay') . '</option>';
+                                                echo '<option value="on-hold" ' . selected($cleanWcStatus, 'on-hold', false) . '>' . esc_html__('On-hold (Manual review required)', 'royalpay') . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                        <p class="description"><?php esc_html_e('Status to assign to the WooCommerce order as soon as customer payment is matched and verified.', 'royalpay'); ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><label><?php esc_html_e('Amount Mismatch / Review Status', 'royalpay'); ?></label></th>
+                                    <td>
+                                        <select name="royalpay_wc_unmatched_status" style="min-width:260px; height:38px; border-radius:6px;">
+                                            <option value="on-hold" <?php selected($wcUnmatchedStatus, 'on-hold'); ?>><?php esc_html_e('On-hold (Hold order for merchant review)', 'royalpay'); ?></option>
+                                            <option value="pending" <?php selected($wcUnmatchedStatus, 'pending'); ?>><?php esc_html_e('Pending Payment', 'royalpay'); ?></option>
+                                            <option value="failed" <?php selected($wcUnmatchedStatus, 'failed'); ?>><?php esc_html_e('Failed', 'royalpay'); ?></option>
+                                        </select>
+                                        <p class="description"><?php esc_html_e('Status to set if customer sends less than the order total.', 'royalpay'); ?></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Card 2: Royal BatchMate -->
+                        <div class="rp-integration-card">
+                            <div class="rp-integration-header">
+                                <div class="rp-integration-info">
+                                    <div class="rp-integration-icon">🎓</div>
+                                    <div>
+                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                            Royal BatchMate (Alumni / Events / Memberships)
+                                            <?php if ($isBatchmateActive): ?>
+                                                <span class="rp-badge-active">🟢 <?php esc_html_e('Active & Connected', 'royalpay'); ?></span>
+                                            <?php else: ?>
+                                                <span class="rp-badge-inactive">⚪ <?php esc_html_e('Not Installed / Inactive', 'royalpay'); ?></span>
+                                            <?php endif; ?>
+                                        </h3>
+                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automatic approval for reunion event registrations, batch memberships, and fee verification.', 'royalpay'); ?></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="rp-switch" title="<?php esc_attr_e('Enable or Disable Royal BatchMate Integration', 'royalpay'); ?>">
+                                        <input type="checkbox" name="royalpay_enable_batchmate" value="1" <?php checked($enableBatchmate, '1'); ?> />
+                                        <span class="rp-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <table class="form-table" style="margin-top:0;">
+                                <tr>
+                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Application Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span></label></th>
+                                    <td>
+                                        <select name="royalpay_batchmate_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
+                                            <option value="approved" <?php selected($bmPaidStatus, 'approved'); ?>><?php esc_html_e('Approved (Default - Automatically confirms applicant)', 'royalpay'); ?></option>
+                                            <option value="confirmed" <?php selected($bmPaidStatus, 'confirmed'); ?>><?php esc_html_e('Confirmed', 'royalpay'); ?></option>
+                                            <option value="verified" <?php selected($bmPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
+                                        </select>
+                                        <p class="description"><?php esc_html_e('Status to assign to the event application when TrxID and amount match.', 'royalpay'); ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><label><?php esc_html_e('Event Member Serial Number', 'royalpay'); ?></label></th>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="royalpay_batchmate_auto_serial" value="1" <?php checked($bmAutoSerial, '1'); ?> />
+                                            <?php esc_html_e('Automatically calculate and issue the next sequential Serial No in event members list.', 'royalpay'); ?>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><label><?php esc_html_e('Confirmation Email', 'royalpay'); ?></label></th>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="royalpay_batchmate_send_email" value="1" <?php checked($bmSendEmail, '1'); ?> />
+                                            <?php esc_html_e('Automatically send official confirmation email to the applicant upon successful verification.', 'royalpay'); ?>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Card 3: Royal Donation -->
+                        <div class="rp-integration-card">
+                            <div class="rp-integration-header">
+                                <div class="rp-integration-info">
+                                    <div class="rp-integration-icon">❤️</div>
+                                    <div>
+                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                            Royal Donation (Fund & Charity Collection)
+                                            <?php if ($isDonationActive): ?>
+                                                <span class="rp-badge-active">🟢 <?php esc_html_e('Installed', 'royalpay'); ?></span>
+                                            <?php else: ?>
+                                                <span class="rp-badge-inactive">⚪ <?php esc_html_e('Available Integration', 'royalpay'); ?></span>
+                                            <?php endif; ?>
+                                        </h3>
+                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Automatic verification and receipt confirmation for charitable contributions and funds.', 'royalpay'); ?></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="rp-switch" title="<?php esc_attr_e('Enable or Disable Royal Donation Integration', 'royalpay'); ?>">
+                                        <input type="checkbox" name="royalpay_enable_donation" value="1" <?php checked($enableDonation, '1'); ?> />
+                                        <span class="rp-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <table class="form-table" style="margin-top:0;">
+                                <tr>
+                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Paid Donation Status', 'royalpay'); ?></label></th>
+                                    <td>
+                                        <select name="royalpay_donation_paid_status" style="min-width:260px; height:38px; border-radius:6px;">
+                                            <option value="completed" <?php selected($donationPaidStatus, 'completed'); ?>><?php esc_html_e('Completed (Default)', 'royalpay'); ?></option>
+                                            <option value="verified" <?php selected($donationPaidStatus, 'verified'); ?>><?php esc_html_e('Verified', 'royalpay'); ?></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Card 4: Webhook Notification -->
+                        <div class="rp-integration-card">
+                            <div class="rp-integration-header">
+                                <div class="rp-integration-info">
+                                    <div class="rp-integration-icon">🌐</div>
+                                    <div>
+                                        <h3 style="margin:0; font-size:16px; color:#111827; display:flex; align-items:center; gap:8px;">
+                                            External Webhook / REST Notification
+                                        </h3>
+                                        <p style="margin:2px 0 0; color:#6b7280; font-size:13px;"><?php esc_html_e('Send real-time JSON POST webhook payloads to your CRM, ERP, or external apps when payment is verified.', 'royalpay'); ?></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="rp-switch" title="<?php esc_attr_e('Enable or Disable Webhook', 'royalpay'); ?>">
+                                        <input type="checkbox" name="royalpay_enable_webhook" value="1" <?php checked($enableWebhook, '1'); ?> />
+                                        <span class="rp-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <table class="form-table" style="margin-top:0;">
+                                <tr>
+                                    <th scope="row" style="width:260px;"><label><?php esc_html_e('Webhook Endpoint URL', 'royalpay'); ?></label></th>
+                                    <td>
+                                        <input type="url" name="royalpay_webhook_url" value="<?php echo esc_attr($webhookUrl); ?>" placeholder="https://example.com/api/payment-webhook" class="regular-text" style="width:100%; max-width:480px; border-radius:6px;" />
+                                        <p class="description"><?php esc_html_e('Instant JSON payload containing Transaction ID, Provider, Amount, Order ID, and Timestamp will be dispatched.', 'royalpay'); ?></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Theme & Colors -->
                     <div id="tab-colors" class="rp-tab-pane">
                         <h3><?php esc_html_e('Quick Color Presets', 'royalpay'); ?></h3>
                         <p class="description" style="margin-bottom:14px;"><?php esc_html_e('Click any preset to apply brand theme colors across the header and buttons:', 'royalpay'); ?></p>
@@ -712,7 +968,7 @@ class AdminMenu {
                         </table>
                     </div>
 
-                    <!-- Tab 3: About Company & System Info -->
+                    <!-- Tab 4: About Company & System Info -->
                     <div id="tab-about" class="rp-tab-pane">
                         <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:24px; max-width:650px;">
                             <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">

@@ -115,25 +115,32 @@ class RoyalBatchmateAdapter {
                 return null;
             }
 
-            // Calculate next serial number for this event
-            $nextSerial = (int) $wpdb->get_var($wpdb->prepare(
-                "SELECT COALESCE(MAX(serial_no), 0) + 1 FROM `{$memberTable}` WHERE `event_id` = %d",
-                $eventId
-            ));
+            // Calculate next serial number and register event member if auto-serial is enabled
+            $autoSerial = get_option('royalpay_batchmate_auto_serial', '1') == '1';
+            $nextSerial = 0;
 
-            // Insert into event_members
-            $wpdb->insert($memberTable, [
-                'event_id'       => $eventId,
-                'member_id'      => $memberId,
-                'application_id' => $appId,
-                'rawdata_id'     => $rawdataId,
-                'serial_no'      => $nextSerial,
-                'approved_by'    => 1, // System / Admin
-            ]);
+            if ($autoSerial) {
+                $nextSerial = (int) $wpdb->get_var($wpdb->prepare(
+                    "SELECT COALESCE(MAX(serial_no), 0) + 1 FROM `{$memberTable}` WHERE `event_id` = %d",
+                    $eventId
+                ));
 
-            // Update application status to approved
+                // Insert into event_members
+                $wpdb->insert($memberTable, [
+                    'event_id'       => $eventId,
+                    'member_id'      => $memberId,
+                    'application_id' => $appId,
+                    'rawdata_id'     => $rawdataId,
+                    'serial_no'      => $nextSerial,
+                    'approved_by'    => 1, // System / Admin
+                ]);
+            }
+
+            // Update application status per configured setting
+            $targetStatus = get_option('royalpay_batchmate_paid_status', 'approved');
+
             $wpdb->update($appTable, [
-                'status'           => 'approved',
+                'status'           => $targetStatus,
                 'payment_method'   => strtoupper($provider),
                 'payment_receiver' => 'Royal Pay Auto',
             ], ['id' => $appId]);
@@ -155,12 +162,37 @@ class RoyalBatchmateAdapter {
 
             $wpdb->query("COMMIT");
 
-            // Trigger BatchMate confirmation email if function exists
-            if (function_exists('BatchMate_send_event_confirmation_email')) {
+            // Trigger BatchMate confirmation email if enabled
+            $sendEmail = get_option('royalpay_batchmate_send_email', '1') == '1';
+            if ($sendEmail && function_exists('BatchMate_send_event_confirmation_email')) {
                 try {
                     \BatchMate_send_event_confirmation_email($appId, $nextSerial, null);
                 } catch (\Throwable $e) {
                     // Suppress email exceptions
+                }
+            }
+
+            // External Webhook Notification if enabled
+            if (get_option('royalpay_enable_webhook', '0') == '1') {
+                $webhookUrl = get_option('royalpay_webhook_url', '');
+                if (!empty($webhookUrl)) {
+                    wp_remote_post($webhookUrl, [
+                        'timeout'   => 5,
+                        'blocking'  => false,
+                        'headers'   => ['Content-Type' => 'application/json'],
+                        'body'      => json_encode([
+                            'event'          => 'payment.matched',
+                            'source'         => 'royal_batchmate',
+                            'application_id' => $appId,
+                            'event_id'       => $eventId,
+                            'serial_no'      => $nextSerial,
+                            'transaction_id' => $trxId,
+                            'provider'       => $provider,
+                            'amount'         => ($amountMinor / 100),
+                            'status'         => $targetStatus,
+                            'timestamp'      => current_time('mysql'),
+                        ]),
+                    ]);
                 }
             }
 
