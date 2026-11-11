@@ -36,14 +36,19 @@ class AdminMenu {
      */
     public function checkLicenseRedirect(): void {
         $is_licensed = LicenseManager::getInstance()->isLicensed();
-        if ($is_licensed) {
-            return;
-        }
-
         $current_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
-        if (strpos($current_page, 'royalpay') === 0 && $current_page !== 'royalpay') {
-            wp_safe_redirect(admin_url('admin.php?page=royalpay'));
-            exit;
+
+        if (!$is_licensed) {
+            if (strpos($current_page, 'royalpay') === 0 && $current_page !== 'royalpay') {
+                wp_safe_redirect(admin_url('admin.php?page=royalpay'));
+                exit;
+            }
+        } else {
+            // When licensed, redirect old royalpay-license URL to Settings > License tab
+            if ($current_page === 'royalpay-license') {
+                wp_safe_redirect(admin_url('admin.php?page=royalpay-settings#tab-license'));
+                exit;
+            }
         }
     }
 
@@ -75,7 +80,7 @@ class AdminMenu {
             return;
         }
 
-        // If licensed: Show all menus
+        // If licensed: Show all menus (License is managed inside Settings > License tab)
         add_submenu_page(
             'royalpay',
             __('Dashboard', 'royalpay'),
@@ -128,15 +133,6 @@ class AdminMenu {
             $cap,
             'royalpay-settings',
             [$this, 'renderSettings']
-        );
-
-        add_submenu_page(
-            'royalpay',
-            __('License', 'royalpay'),
-            __('License', 'royalpay'),
-            $cap,
-            'royalpay-license',
-            [$this, 'renderLicense']
         );
     }
 
@@ -476,10 +472,27 @@ class AdminMenu {
         $devices = DeviceManager::getDevices();
         $pairing = DeviceManager::generatePairingPayload();
         $apkUrl = ROYALPAY_PLUGIN_URL . 'apk/royal-pay-agent.apk';
+        $apkFile = ROYALPAY_PLUGIN_DIR . 'apk/royal-pay-agent.apk';
+        $isPlaceholderApk = !file_exists($apkFile) || filesize($apkFile) < 100000;
         ?>
         <div class="wrap royalpay-admin-wrap">
             <?php self::renderHeader('📱', __('Android Agent Devices', 'royalpay'), __('Manage connected smartphones running Royal Pay Agent APK.', 'royalpay')); ?>
             <?php settings_errors('royalpay_notices'); ?>
+
+            <?php if ($isPlaceholderApk): ?>
+                <div class="notice notice-warning inline" style="margin: 0 0 20px 0; padding: 14px 18px; border-left: 4px solid #f59e0b; background: #fffbeb; border-radius: 8px;">
+                    <h3 style="margin: 0 0 6px 0; color: #b45309; font-size: 15px; font-weight: 700;">⚠️ <?php esc_html_e('Native Android APK Setup Notice', 'royalpay'); ?></h3>
+                    <p style="margin: 0 0 8px 0; font-size: 13px; color: #78350f;">
+                        <?php esc_html_e('The file in the apk/ folder is currently a scaffolding placeholder (438 bytes). Modern Android devices will reject it with "Parse error" or "Can\'t install app" because it lacks compiled DEX bytecode and APK signatures.', 'royalpay'); ?>
+                    </p>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #78350f; list-style-type: disc; line-height: 1.6;">
+                        <li><strong><?php esc_html_e('Included Android Kotlin Project:', 'royalpay'); ?></strong> <?php esc_html_e('The complete, buildable native Android project is located at', 'royalpay'); ?> <code>wp-content/plugins/royal-pay/android/RoyalPayAgent</code>. Open it in Android Studio and select <strong>Build &gt; Build APK(s)</strong>.</li>
+                        <li><strong><?php esc_html_e('Replace Download File:', 'royalpay'); ?></strong> <?php esc_html_e('Copy the compiled', 'royalpay'); ?> <code>app-release.apk</code> <?php esc_html_e('to', 'royalpay'); ?> <code>wp-content/plugins/royal-pay/apk/royal-pay-agent.apk</code>.</li>
+                        <li><strong><?php esc_html_e('Device Sideload Requirement:', 'royalpay'); ?></strong> <?php esc_html_e('On Android, enable "Install unknown apps" for Chrome/Files, and disable Battery Optimization for background SMS sync.', 'royalpay'); ?></li>
+                        <li><strong><?php esc_html_e('Instant Webhook Alternative:', 'royalpay'); ?></strong> <?php esc_html_e('You can also use any standard SMS Forwarder app configured to send HTTP POST to', 'royalpay'); ?> <code><?php echo esc_html(rest_url('royal-pay/v1/devices/sms/ingest')); ?></code>.</li>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
             <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
                 <a href="<?php echo esc_url($apkUrl); ?>" class="button-download-apk" download>
@@ -696,9 +709,11 @@ class AdminMenu {
         $enableWebhook      = get_option('royalpay_enable_webhook', '0');
         $webhookUrl         = get_option('royalpay_webhook_url', '');
 
+        $licenseKey         = get_option('royalpay_license_key', '');
         $isLicensed         = LicenseManager::getInstance()->isLicensed();
         $rawCache           = get_option('royalpay_license_cache', '');
         $licenseData        = !empty($rawCache) ? json_decode($rawCache, true) : null;
+        $licenseInfo        = $licenseData['license_data'] ?? [];
         ?>
         <div class="wrap royalpay-admin-wrap">
             <?php self::renderHeader('⚙️', __('Royal Pay Settings & Configuration', 'royalpay'), __('Manage supported plugins, paid order statuses, theme colors, and gateways.', 'royalpay')); ?>
@@ -718,6 +733,9 @@ class AdminMenu {
                         </button>
                         <button type="button" class="rp-tab-btn" data-tab="tab-colors">
                             <span>🎨</span> <?php esc_html_e('Theme & Brand Colors', 'royalpay'); ?>
+                        </button>
+                        <button type="button" class="rp-tab-btn" data-tab="tab-license">
+                            <span>🔑</span> <?php esc_html_e('License & Activation', 'royalpay'); ?>
                         </button>
                         <button type="button" class="rp-tab-btn" data-tab="tab-about">
                             <span>🏢</span> <?php esc_html_e('About Royal Technologies', 'royalpay'); ?>
@@ -753,7 +771,7 @@ class AdminMenu {
                                         <?php esc_html_e('Operating Currency', 'royalpay'); ?>
                                     </label>
                                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; padding:10px 14px; font-weight:600; color:#0f172a; height:42px; display:flex; align-items:center; gap:8px;">
-                                        <span style="color:#059669; font-size:16px;">৳</span> BDT (Bangladeshi Taka)
+                                        <span style="color:#059669; font-weight:700;">BDT</span> - <?php esc_html_e('Bangladeshi Taka', 'royalpay'); ?>
                                     </div>
                                     <p class="rp-form-desc">
                                         <?php esc_html_e('Calculated in exact minor units (1 BDT = 100 minor units) to prevent floating-point rounding errors.', 'royalpay'); ?>
@@ -844,7 +862,7 @@ class AdminMenu {
                             <div class="rp-form-grid" style="margin-top:16px;">
                                 <div class="rp-form-group">
                                     <label class="rp-form-label" for="royalpay_wc_paid_status">
-                                        <?php esc_html_e('Paid Order Status (পেমেন্ট নিশ্চিত হলে স্ট্যাটাস)', 'royalpay'); ?> <span style="color:#ef4444;">*</span>
+                                        <?php esc_html_e('Paid Order Status', 'royalpay'); ?> <span style="color:#ef4444;">*</span>
                                     </label>
                                     <select name="royalpay_wc_paid_status" id="royalpay_wc_paid_status" class="rp-select">
                                         <?php
@@ -1121,7 +1139,92 @@ class AdminMenu {
                     </div>
 
                     <!-- ==============================================
-                         TAB 4: About Company & System Info
+                         TAB 4: License & Activation
+                         ============================================== -->
+                    <div id="tab-license" class="rp-tab-pane">
+                        <div class="rp-settings-section">
+                            <div class="rp-section-header">
+                                <div class="rp-section-icon">🔑</div>
+                                <div class="rp-section-title-wrap">
+                                    <h3><?php esc_html_e('RoyalAuth v2.0 License Status', 'royalpay'); ?></h3>
+                                    <p><?php esc_html_e('Resilient Local-First Architecture with Ed25519 digital signature validation.', 'royalpay'); ?></p>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; align-items:center; gap:16px; padding:20px; border-radius:12px; margin-bottom:24px; background:<?php echo $isLicensed ? 'linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border:1px solid #a7f3d0;' : 'linear-gradient(135deg, #fff1f2 0%, #fef2f2 100%); border:1px solid #fecaca;'; ?>">
+                                <div style="font-size:36px; line-height:1;"><?php echo $isLicensed ? '🛡️' : '⚠️'; ?></div>
+                                <div style="flex:1;">
+                                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                        <h4 style="margin:0; font-size:17px; font-weight:700; color:<?php echo $isLicensed ? '#065f46' : '#991b1b'; ?>;">
+                                            <?php echo $isLicensed ? esc_html__('License Active & Cryptographically Verified', 'royalpay') : esc_html__('License Inactive / Not Activated', 'royalpay'); ?>
+                                        </h4>
+                                        <?php if ($isLicensed): ?>
+                                            <span style="display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:12px; font-weight:700; background:#059669; color:#ffffff;">
+                                                ✓ Ed25519 Verified
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p style="margin:6px 0 0; font-size:13px; color:<?php echo $isLicensed ? '#047857' : '#b91c1c'; ?>;">
+                                        <?php if ($isLicensed): ?>
+                                            <?php esc_html_e('Your copy of Royal Pay is authentic, locally cached, and resilient against network outages.', 'royalpay'); ?>
+                                        <?php else: ?>
+                                            <?php esc_html_e('Enter your license key provided by Royal Technologies to enable automated payment verification.', 'royalpay'); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="rp-form-grid" style="margin-bottom:20px;">
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label"><?php esc_html_e('License Key', 'royalpay'); ?></label>
+                                    <input type="text" value="<?php echo esc_attr(!empty($licenseKey) ? substr($licenseKey, 0, 8) . '-****-****-' . substr($licenseKey, -8) : 'Not Activated'); ?>" class="rp-input" style="font-family:monospace; font-weight:600; letter-spacing:1px; background:#f8fafc;" readonly />
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Masked for security. Cryptographic signature stored in local WordPress cache.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label"><?php esc_html_e('Licensed Domain', 'royalpay'); ?></label>
+                                    <input type="text" value="<?php echo esc_attr(!empty($licenseInfo['domain']) ? $licenseInfo['domain'] : ($_SERVER['HTTP_HOST'] ?? 'localhost')); ?>" class="rp-input" style="background:#f8fafc;" readonly />
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Authorized host binding for this WordPress installation.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label"><?php esc_html_e('License Type / Tier', 'royalpay'); ?></label>
+                                    <input type="text" value="<?php echo esc_attr(ucfirst($licenseInfo['type'] ?? 'Lifetime Business')); ?>" class="rp-input" style="background:#f8fafc;" readonly />
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Valid for unlimited automated transactions and updates.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+
+                                <div class="rp-form-group">
+                                    <label class="rp-form-label"><?php esc_html_e('Cryptographic Validation Engine', 'royalpay'); ?></label>
+                                    <input type="text" value="RoyalAuth v2.0 (Sodium Ed25519 Elliptic Curve)" class="rp-input" style="background:#f8fafc;" readonly />
+                                    <p class="rp-form-desc">
+                                        <?php esc_html_e('Local-first asymmetric verification with zero external round-trip dependency.', 'royalpay'); ?>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div style="padding-top:16px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                                <div>
+                                    <span style="font-size:13px; color:#64748b;">
+                                        <?php esc_html_e('Need to transfer this license to another domain or staging server?', 'royalpay'); ?>
+                                    </span>
+                                </div>
+                                <div>
+                                    <button type="button" id="rp-deactivate-license-btn" class="button" style="color:#ef4444; border-color:#fca5a5; background:#fff; font-weight:600; border-radius:8px; padding:6px 16px; display:inline-flex; align-items:center; gap:6px;">
+                                        <span>🗑️</span> <?php esc_html_e('Deactivate License on This Domain', 'royalpay'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==============================================
+                         TAB 5: About Company & System Info
                          ============================================== -->
                     <div id="tab-about" class="rp-tab-pane">
                         <div class="rp-about-hero">
@@ -1200,6 +1303,12 @@ class AdminMenu {
                             <span>💾</span> <?php esc_html_e('Save Changes', 'royalpay'); ?>
                         </button>
                     </div>
+                </form>
+
+                <!-- Hidden Deactivation Form Triggered via SweetAlert2 Modal -->
+                <form id="rp-deactivate-form" method="POST" style="display:none;">
+                    <?php wp_nonce_field('royalpay_license_action', 'royalpay_license_nonce'); ?>
+                    <input type="hidden" name="royalpay_deactivate_license" value="1" />
                 </form>
             </div>
         </div>

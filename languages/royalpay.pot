@@ -4,190 +4,936 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Royal Pay 1.0.0\n"
 "Report-Msgid-Bugs-To: info@royaltechbd.com\n"
-"POT-Creation-Date: 2026-11-11 17:35+0600\n"
+"POT-Creation-Date: 2026-11-11 12:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Royal Technologies <info@royaltechbd.com>\n"
-"Language-Team: Bengali <info@royaltechbd.com>\n"
-"Language: bn_BD\n"
+"Language-Team: English <info@royaltechbd.com>\n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Royal Technologies\n"
-"X-Domain: royalpay\n"
+"X-Domain: royalpay\n\n"
 
-#: royal-pay.php:5
-msgid "Automated MFS Payment Gateway (bKash, Nagad, Rocket) for WooCommerce with Android SMS sync and instant order verification by Royal Technologies."
-msgstr ""
-
-#: royal-pay.php:93
-msgid "Every Minute"
-msgstr ""
-
-#: includes/Admin/AdminMenu.php:55
-#: includes/Admin/AdminMenu.php:56
+#: includes/Admin/AdminMenu.php:61
+#: includes/Admin/AdminMenu.php:62
 msgid "Royal Pay"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:68
-#: includes/Admin/AdminMenu.php:69
-#: includes/Admin/AdminMenu.php:134
-#: includes/Admin/AdminMenu.php:135
-#: includes/Core/Plugin.php:141
+#: includes/Admin/AdminMenu.php:74
+#: includes/Admin/AdminMenu.php:75
+#: includes/Core/Plugin.php:142
 msgid "License"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:80
-#: includes/Admin/AdminMenu.php:81
+#: includes/Admin/AdminMenu.php:86
+#: includes/Admin/AdminMenu.php:87
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:89
-#: includes/Admin/AdminMenu.php:90
+#: includes/Admin/AdminMenu.php:95
+#: includes/Admin/AdminMenu.php:96
 msgid "Wallets"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:98
-#: includes/Admin/AdminMenu.php:99
+#: includes/Admin/AdminMenu.php:104
+#: includes/Admin/AdminMenu.php:105
 msgid "Devices"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:107
-#: includes/Admin/AdminMenu.php:108
+#: includes/Admin/AdminMenu.php:113
+#: includes/Admin/AdminMenu.php:114
 msgid "Transactions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:116
-#: includes/Admin/AdminMenu.php:117
+#: includes/Admin/AdminMenu.php:122
+#: includes/Admin/AdminMenu.php:123
 msgid "SMS Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:125
-#: includes/Admin/AdminMenu.php:126
-#: includes/Core/Plugin.php:140
+#: includes/Admin/AdminMenu.php:131
+#: includes/Admin/AdminMenu.php:132
+#: includes/Core/Plugin.php:141
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:169
+#: includes/Admin/AdminMenu.php:166
 msgid "Permission denied."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:196
+#: includes/Admin/AdminMenu.php:193
 msgid "License deactivated successfully."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:215
+#: includes/Admin/AdminMenu.php:246
 msgid "Settings saved successfully."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:222
+#: includes/Admin/AdminMenu.php:253
 msgid "Wallet saved successfully."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:260
+#: includes/Admin/AdminMenu.php:291
 msgid "Payment Automation Dashboard"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:260
+#: includes/Admin/AdminMenu.php:291
 msgid "Real-time transaction intelligence and automated MFS verification."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:347
+#: includes/Admin/AdminMenu.php:299
+msgid "Total Verified Volume"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:307
+msgid "Verified Orders"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:315
+msgid "Total Ingested Txns"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:323
+msgid "Active Android Agents"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:330
+msgid "Recent Ingested Transactions"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:331
+msgid "View All in DataTables"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:337
+msgid "TrxID"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:338
+#: includes/Admin/AdminMenu.php:387
+#: includes/Admin/AdminMenu.php:591
+msgid "Provider"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:339
+#: includes/Admin/AdminMenu.php:593
+msgid "Amount"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:340
+#: includes/Admin/AdminMenu.php:645
+msgid "Sender"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:341
+#: includes/Admin/AdminMenu.php:595
+msgid "Reference"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:342
+#: includes/Admin/AdminMenu.php:391
+#: includes/Admin/AdminMenu.php:514
+#: includes/Admin/AdminMenu.php:597
+msgid "Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:343
+msgid "Time"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:378
 msgid "MFS Wallets Configuration"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:347
+#: includes/Admin/AdminMenu.php:378
 msgid "Configure bKash, Nagad, and Rocket numbers and accounts."
 msgstr ""
 
+#: includes/Admin/AdminMenu.php:383
+msgid "Active Numbers & Accounts"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:388
+msgid "Account Number"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:389
+msgid "Type"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:390
+msgid "Label"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:392
+msgid "Actions"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:415
+msgid "Delete"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:425
+msgid "Add New MFS Wallet"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:429
+msgid "Provider:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:438
+msgid "Account Number:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:443
+msgid "Account Type:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:445
+msgid "Personal (Send Money)"
+msgstr ""
+
 #: includes/Admin/AdminMenu.php:446
+msgid "Merchant (Payment)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:447
+msgid "Agent (Cash In)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:452
+msgid "Account Label (Optional):"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:458
+msgid "Save Wallet"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:479
 msgid "Android Agent Devices"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:446
+#: includes/Admin/AdminMenu.php:479
 msgid "Manage connected smartphones running Royal Pay Agent APK."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:535
+#: includes/Admin/AdminMenu.php:484
+msgid "Native Android APK Setup Notice"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:486
+msgid "The file in the apk/ folder is currently a scaffolding placeholder (438 bytes). Modern Android devices will reject it with \"Parse error\" or \"Can\'t install app\" because it lacks compiled DEX bytecode and APK signatures."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:489
+msgid "Included Android Kotlin Project:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:489
+msgid "The complete, buildable native Android project is located at"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:490
+msgid "Replace Download File:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:490
+msgid "Copy the compiled"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:490
+msgid "to"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:491
+msgid "Device Sideload Requirement:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:491
+msgid "On Android, enable \"Install unknown apps\" for Chrome/Files, and disable Battery Optimization for background SMS sync."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:492
+msgid "Instant Webhook Alternative:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:492
+msgid "You can also use any standard SMS Forwarder app configured to send HTTP POST to"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:499
+msgid "Download Royal Pay Agent (APK)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:505
+msgid "Connected Android Agents"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:509
+msgid "Device Name"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:510
+msgid "Model / Android"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:511
+msgid "Battery"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:512
+msgid "Network / SIM"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:513
+msgid "Last Seen"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:515
+msgid "Action"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:545
+msgid "Revoke"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:555
+msgid "Connect New Device"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:557
+msgid "Open Royal Pay Agent on your phone and scan this QR code to connect instantly:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:565
+msgid "API URL:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:567
+msgid "Pairing Token:"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:583
 msgid "Transactions Ledger"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:535
+#: includes/Admin/AdminMenu.php:583
 msgid "Complete ledger of ingested transactions with DataTables search and filter."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:589
+#: includes/Admin/AdminMenu.php:590
+#: includes/Admin/AdminMenu.php:644
+msgid "ID"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:592
+msgid "Transaction ID"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:594
+msgid "Sender Number"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:596
+msgid "Source"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:598
+#: includes/Admin/AdminMenu.php:650
+msgid "Received At"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:637
 msgid "Incoming SMS Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:589
+#: includes/Admin/AdminMenu.php:637
 msgid "Raw telecom messages captured by Android Agent with parser audit."
 msgstr ""
 
+#: includes/Admin/AdminMenu.php:646
+msgid "SMS Body"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:647
+msgid "Parsed TrxID"
+msgstr ""
+
 #: includes/Admin/AdminMenu.php:648
+msgid "Parsed Amount"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:719
 msgid "Royal Pay Settings & Configuration"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:648
-msgid "Manage theme colors, gateway preferences, and company information."
+#: includes/Admin/AdminMenu.php:719
+msgid "Manage supported plugins, paid order statuses, theme colors, and gateways."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:776
-msgid "Royal Pay License Activation"
+#: includes/Admin/AdminMenu.php:729
+msgid "General Settings"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:776
-msgid "RoyalTechBD Resilient Local-First Architecture with Ed25519 signature verification."
+#: includes/Admin/AdminMenu.php:732
+msgid "Supported Plugins & Paid Status"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:781
+#: includes/Admin/AdminMenu.php:735
+msgid "Theme & Brand Colors"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:738
+msgid "License & Activation"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:741
+msgid "About Royal Technologies"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:753
+msgid "Payment Processing & Order Reference"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:754
+msgid "Configure checkout invoice prefix and core financial parameters."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:761
+msgid "Order Reference Prefix"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:765
+msgid "Prefix used when customers enter order reference during payment (e.g. RP-10492)."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:771
+msgid "Operating Currency"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:774
+msgid "Bangladeshi Taka"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:777
+msgid "Calculated in exact minor units (1 BDT = 100 minor units) to prevent floating-point rounding errors."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:787
+msgid "Anti-Fraud & Ingestion Policy"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:788
+msgid "Hardware and telecom-grade security filters built into Royal Pay."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:796
+msgid "Strict Telecom Sender Whitelist"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:799
+msgid "Only accepts verified SMS originating from official shortcodes: 16247, 16167, 16216, bKash, Nagad, Rocket."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:808
+msgid "Zero Amount-Only Approvals"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:811
+msgid "Every transaction requires an exact Transaction ID (TrxID) or valid reference match before unlocking orders."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:826
+msgid "Supported Plugin Integrations"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:829
+msgid "Select which plugins Royal Pay should automatically verify payments for, and configure the Paid Order Status for each."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:844
+#: includes/Admin/AdminMenu.php:915
+msgid "Active & Connected"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:846
+#: includes/Admin/AdminMenu.php:917
+msgid "Not Installed / Inactive"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:850
+msgid "Automated checkout gateway & instant order verification for WooCommerce e-commerce stores."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:855
+msgid "Enable or Disable WooCommerce Integration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:865
+msgid "Paid Order Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:877
+msgid "Processing (Default for physical goods)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:878
+msgid "Completed (For instant digital downloads / events)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:879
+msgid "On-hold (Manual review required)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:884
+msgid "Status to assign to WooCommerce orders immediately after customer TrxID and amount are matched."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:890
+msgid "Amount Mismatch / Review Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:893
+msgid "On-hold (Hold order for merchant review)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:894
+msgid "Pending Payment"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:895
+msgid "Failed"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:898
+msgid "Assigned when customer enters a valid TrxID but paid amount is lower than the order total."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:921
+msgid "Automatic event ticket and registration fee verification with instant approval and serial number issuance."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:926
+msgid "Enable or Disable Royal BatchMate Integration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:936
+msgid "Paid Application Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:939
+msgid "Approved (Default - Automatically confirms applicant)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:940
+msgid "Confirmed"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:941
+#: includes/Admin/AdminMenu.php:1008
+msgid "Verified"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:944
+msgid "Status to assign to event applications upon successful MFS verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:952
+msgid "Auto Issue Serial Number"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:954
+msgid "Calculates next sequential serial number and inserts row into event_members table."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:962
+msgid "Send Confirmation Email"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:964
+msgid "Automatically dispatch official confirmation email with ticket details to applicant."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:983
+msgid "Installed"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:985
+msgid "Available Integration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:989
+msgid "Automatic verification and donor receipt confirmation for charitable contributions and funds."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:994
+msgid "Enable or Disable Royal Donation Integration"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1004
+msgid "Paid Donation Status"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1007
+msgid "Completed (Default)"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1026
+msgid "Dispatch instant JSON payloads to your external CRM, ERP, or web app when transactions are verified."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1031
+msgid "Enable or Disable Webhook"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1040
+msgid "Webhook Endpoint URL"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1044
+msgid "Webhook receives POST request containing Transaction ID, Provider, Amount, Order ID, and Timestamp upon match."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1058
+msgid "Interactive Brand Theme Palettes"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1059
+msgid "Select any designer palette below to instantly style the animated header, action buttons, and badges."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1118
+msgid "Custom Hex Color Codes"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1119
+msgid "Specify custom branding colors for the gradient headers and elements."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1126
+msgid "Primary Brand Color"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1133
+msgid "Gradient Dark Accent Color"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1149
+#: includes/Admin/AdminMenu.php:1334
 msgid "RoyalAuth v2.0 License Status"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:783
-msgid "Verify your license key issued by Royal Technologies to enable automated payment verification."
+#: includes/Admin/AdminMenu.php:1150
+msgid "Resilient Local-First Architecture with Ed25519 digital signature validation."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:790
-msgid "License Active & Verified"
+#: includes/Admin/AdminMenu.php:1159
+msgid "License Active & Cryptographically Verified"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:790
+#: includes/Admin/AdminMenu.php:1159
+#: includes/Admin/AdminMenu.php:1343
 msgid "License Inactive / Not Activated"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:798
+#: includes/Admin/AdminMenu.php:1169
+msgid "Your copy of Royal Pay is authentic, locally cached, and resilient against network outages."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1171
+msgid "Enter your license key provided by Royal Technologies to enable automated payment verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1179
+msgid "License Key"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1182
+msgid "Masked for security. Cryptographic signature stored in local WordPress cache."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1187
+msgid "Licensed Domain"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1190
+msgid "Authorized host binding for this WordPress installation."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1195
+msgid "License Type / Tier"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1198
+msgid "Valid for unlimited automated transactions and updates."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1203
+msgid "Cryptographic Validation Engine"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1206
+msgid "Local-first asymmetric verification with zero external round-trip dependency."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1214
+msgid "Need to transfer this license to another domain or staging server?"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1219
+msgid "Deactivate License on This Domain"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1251
+msgid "Support Helpline"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1256
+msgid "Direct phone & WhatsApp assistance for merchant setup & technical verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1262
+msgid "Registered Office"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1267
+msgid "Official engineering and customer support facility in Bangladesh."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1273
+msgid "Official Portal"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1280
+msgid "Product documentation, knowledge base, release notes, and downloads."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1286
+msgid "RoyalAuth v2.0 Security"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1288
+msgid "Ed25519 Cryptographic Verification Active"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1288
+msgid "License Inactive"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1291
+msgid "Local-first tamper-proof verification resilient against server downtime."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1300
+msgid "Changes take effect immediately across all checkout gateways and automation hooks."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1303
+msgid "Save Changes"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1329
+msgid "Royal Pay License Activation"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1329
+msgid "RoyalTechBD Resilient Local-First Architecture with Ed25519 signature verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1336
+msgid "Verify your license key issued by Royal Technologies to enable automated payment verification."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1343
+msgid "License Active & Verified"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:1351
 msgid "Enter your license key provided by Royal Technologies to activate."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:809
+#: includes/Admin/AdminMenu.php:1362
 msgid "RoyalTechBD License Key:"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:816
+#: includes/Admin/AdminMenu.php:1369
 msgid "Activate License"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:828
+#: includes/Admin/AdminMenu.php:1381
 msgid "Active License Key:"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:835
+#: includes/Admin/AdminMenu.php:1388
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/Gateway/WooCommerceGateway.php:32
-msgid "bKash, Nagad & Rocket (Auto Verification)"
+#: includes/Core/GitHubUpdater.php:69
+msgid "Please activate your Royal Pay license key to install automatic updates."
 msgstr ""
 
-#: includes/Gateway/WooCommerceGateway.php:33
-msgid "Pay securely via bKash, Nagad, or Rocket personal/merchant and get instant verification."
+#: includes/Core/GitHubUpdater.php:108
+msgid "Automated MFS Payment Gateway (bKash, Nagad, Rocket) for WooCommerce with Android SMS sync and instant order verification by Royal Technologies."
 msgstr ""
 
-#: includes/Gateway/WooCommerceGateway.php:124
-msgid "Please select a payment method and enter the Transaction ID (TrxID)."
+#: includes/Devices/DeviceManager.php:92
+msgid "Pairing token is invalid or expired. Please scan a fresh QR code."
+msgstr ""
+
+#: includes/Devices/DeviceManager.php:145
+msgid "Device paired successfully!"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:21
+msgid "bKash / Nagad / Rocket (Royal Pay)"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:22
+msgid "Automated payment gateway for bKash, Nagad, and Rocket with instant order verification."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:45
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:47
+msgid "Enable Royal Pay Gateway"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:51
+msgid "Title"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:53
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:54
+msgid "bKash / Nagad / Rocket (Automated)"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:58
+msgid "Description"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:60
+msgid "Payment method description that the customer will see on checkout."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:61
+msgid "Pay using your bKash, Nagad, or Rocket account. Complete your payment and provide the Transaction ID below."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:64
+msgid "Instructions"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:66
+msgid "Instructions that will be added to the thank you page and emails."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:67
+msgid "Thank you for your payment. Your order will be processed automatically as soon as your transaction is verified."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:82
+msgid "No active MFS wallets configured. Please contact store support."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:94
+msgid "1. Select Payment Method:"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:110
+msgid "Send money to our official number:"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:121
+msgid "Use your Order ID as the payment reference if prompted."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:127
+msgid "2. Enter Transaction Information:"
 msgstr ""
 
 #: includes/Gateway/WooCommerceGateway.php:131
-msgid "The Transaction ID must be at least 6 alphanumeric characters."
+msgid "Sender Mobile Number"
 msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:137
+msgid "Transaction ID (TrxID)"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:166
+msgid "Please select your MFS provider (bKash, Nagad, or Rocket)."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:171
+msgid "Please enter a valid 11-digit sender mobile number."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:176
+msgid "Please enter a valid Transaction ID (TrxID)."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:203
+msgid "Royal Pay: Awaiting transaction verification. Provider: %s | Sender: %s | TrxID: %s"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:239
+msgid "Payment Verified & Completed!"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:240
+msgid "Your %s payment with TrxID %s has been automatically verified."
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:242
+msgid "Awaiting SMS Verification"
+msgstr ""
+
+#: includes/Gateway/WooCommerceGateway.php:243
+msgid "We received your TrxID (%s). Our automated agent is verifying the transaction with %s. Your order status will update momentarily."
+msgstr ""
+
+#: includes/License/LicenseManager.php:246
+msgid "Please enter a valid license key."
+msgstr ""
+
+#: includes/License/LicenseManager.php:262
+msgid "License server is unreachable: "
+msgstr ""
+
+#: includes/License/LicenseManager.php:269
+msgid "License server is temporarily unavailable. Please try again."
+msgstr ""
+
+#: includes/License/LicenseManager.php:273
+msgid "Invalid license key or domain unauthorized."
+msgstr ""
+
+#: includes/License/LicenseManager.php:277
+msgid "Invalid server response signature. Possible tampering detected."
+msgstr ""
+
+#: includes/License/LicenseManager.php:292
+msgid "License activated successfully!"
+msgstr ""
+
+#: includes/Matching/MatchingEngine.php:153
+msgid "Royal Pay: Transaction received (%s %s) but amount does not match order total (%s). Flagged for review."
+msgstr ""
+
+#: includes/Matching/MatchingEngine.php:190
+msgid "Royal Pay: Payment verified (%s). Status set to %s per integration settings."
+msgstr ""
+
+#: includes/Matching/MatchingEngine.php:200
+msgid "Royal Pay: Payment verified automatically via %s. TrxID: %s | Amount: %s BDT | Rule: %s"
+msgstr ""
+
+#: royal-pay.php:100
+msgid "Every Minute"
+msgstr ""
+

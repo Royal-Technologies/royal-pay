@@ -74,3 +74,28 @@ The app uses strict regular expressions matching official MFS sender IDs:
 2. **Exponential Backoff**: WorkManager handles network retries with exponential backoff (`BackoffPolicy.EXPONENTIAL`).
 3. **No Message Deletion**: Unsynchronized records are never purged until acknowledged by the SaaS platform.
 4. **Heartbeat & Telemetry**: Every 15 minutes, a lightweight heartbeat is transmitted with battery percentage, network type (Wi-Fi/Cellular), SIM operator, and unsynced queue length.
+
+---
+
+## 4. Building the APK & Device Installation Troubleshooting
+
+### Why did Android say "Can't install app" or "Parse Error"?
+If you attempted to install `apk/royal-pay-agent.apk` directly from the initial repository download, Android rejected it because that initial file was a 438-byte placeholder stub without compiled DEX bytecode (`classes.dex`), binary resources (`resources.arsc`), or APK signatures (`v1/v2/v3`).
+
+### Step-by-Step: How to Build the Real APK
+1. The complete native Android Kotlin source code is located at:
+   `wp-content/plugins/royal-pay/android/RoyalPayAgent/`
+2. Open this directory in **Android Studio**.
+3. Click **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+4. Once compilation finishes, copy the generated `.apk` from `app/build/outputs/apk/release/` to `wp-content/plugins/royal-pay/apk/royal-pay-agent.apk`.
+5. Download the APK to your phone.
+
+### Android Device Sideloading Requirements
+Modern Android versions (Android 8 through 14+) require two phone settings:
+1. **Allow Unknown Apps**: In phone **Settings > Apps > Special App Access > Install Unknown Apps**, allow the browser (Chrome) or File Manager to install APKs.
+2. **Disable Battery Optimization**: In phone **Settings > Battery > Battery Optimization**, select `Royal Pay Agent` and choose **"Don't Optimize / Unrestricted"** so Android does not kill the background SMS listener worker.
+
+### No-Code Webhook Alternative (Instant Setup)
+If you need payment SMS automation running immediately without building an APK, you can install any open-source or commercial Android SMS Forwarder (e.g. *SMS Forwarder* or *MacroDroid*) and forward incoming SMS to:
+`POST https://your-site.com/wp-json/royal-pay/v1/devices/sms/ingest`
+with header `X-Device-Token: <YOUR_DEVICE_TOKEN>`.
