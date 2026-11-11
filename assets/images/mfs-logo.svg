@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
+  <defs>
+    <!-- bKash Pink -->
+    <linearGradient id="bkashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E2136E" />
+      <stop offset="100%" stop-color="#C20D5D" />
+    </linearGradient>
+    <!-- Nagad Orange -->
+    <linearGradient id="nagadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7941D" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+    <!-- Rocket Purple -->
+    <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C3392" />
+      <stop offset="100%" stop-color="#6B21A8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Container Box -->
+  <rect x="0" y="0" width="320" height="64" rx="10" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5" />
+
+  <!-- bKash Icon Badge -->
+  <g transform="translate(14, 12)">
+    <rect width="84" height="40" rx="6" fill="url(#bkashGrad)" />
+    <text x="42" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="14" fill="#FFFFFF" text-anchor="middle">bKash</text>
+  </g>
+
+  <!-- Nagad Icon Badge -->
+  <g transform="translate(118, 12)">
+    <rect width="84" height="40" rx="6" fill="url(#nagadGrad)" />
+    <text x="42" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="14" fill="#FFFFFF" text-anchor="middle">Nagad</text>
+  </g>
+
+  <!-- Rocket Icon Badge -->
+  <g transform="translate(222, 12)">
+    <rect width="84" height="40" rx="6" fill="url(#rocketGrad)" />
+    <text x="42" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="14" fill="#FFFFFF" text-anchor="middle">Rocket</text>
+  </g>
+</svg>

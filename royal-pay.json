@@ -1,0 +1,20 @@
+{
+    "version": "1.0.0",
+    "homepage": "https://www.royaltechbd.com/plugins/royal-pay",
+    "download_url": "https://github.com/Royal-Technologies/royal-pay/releases/latest/download/royal-pay.zip",
+    "tested": "6.7",
+    "requires_php": "8.1",
+    "banners": {
+        "low": "https://raw.githubusercontent.com/Royal-Technologies/royal-pay/main/assets/images/mfs-logo.svg",
+        "high": "https://raw.githubusercontent.com/Royal-Technologies/royal-pay/main/assets/images/mfs-logo.svg"
+    },
+    "icons": {
+        "svg": "https://raw.githubusercontent.com/Royal-Technologies/royal-pay/main/assets/images/logo.svg",
+        "1x": "https://raw.githubusercontent.com/Royal-Technologies/royal-pay/main/assets/images/logo.svg",
+        "2x": "https://raw.githubusercontent.com/Royal-Technologies/royal-pay/main/assets/images/logo.svg"
+    },
+    "sections": {
+        "description": "Automated MFS Payment Gateway (bKash, Nagad, Rocket) for WooCommerce with Android SMS sync and instant order verification by Royal Technologies.",
+        "changelog": "<ul>\n\t<li><strong>1.0.0</strong> - Initial production release of Royal Pay with WooCommerce Checkout Gateway, Royal BatchMate integration, RoyalAuth v2.0 Ed25519 licensing, strict MFS sender filtering, Android Agent pairing via QR Code, and automated transaction matching.</li>\n</ul>"
+    }
+}

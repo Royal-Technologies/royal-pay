@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="royalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#9333EA" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.05" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#4338CA" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background Rounded Shield -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#royalGrad)" filter="url(#glow)" />
+
+  <!-- Subtle Payment Card Outline in Glassmorphism -->
+  <rect x="76" y="116" width="360" height="230" rx="28" fill="url(#cardGrad)" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="2.5" />
+  
+  <!-- Magnetic Stripe / Card Details -->
+  <rect x="76" y="156" width="360" height="36" fill="#1E1B4B" fill-opacity="0.35" />
+  <circle cx="126" cy="270" r="18" fill="#F59E0B" fill-opacity="0.9" />
+  <circle cx="150" cy="270" r="18" fill="#EF4444" fill-opacity="0.8" />
+
+  <!-- Royal Crown (Main Brand Symbol) -->
+  <path d="M156 310 L180 180 L236 240 L256 160 L276 240 L332 180 L356 310 Z" fill="url(#goldGrad)" filter="drop-shadow(0 6px 8px rgba(0,0,0,0.25))" />
+
+  <!-- Crown Base Band -->
+  <rect x="146" y="306" width="220" height="24" rx="12" fill="#F59E0B" stroke="#B45309" stroke-width="2" />
+  <circle cx="180" cy="318" r="5" fill="#FFFFFF" />
+  <circle cx="218" cy="318" r="5" fill="#EF4444" />
+  <circle cx="256" cy="318" r="6" fill="#3B82F6" />
+  <circle cx="294" cy="318" r="5" fill="#10B981" />
+  <circle cx="332" cy="318" r="5" fill="#FFFFFF" />
+
+  <!-- Crown Jewels on Top Points -->
+  <circle cx="180" cy="180" r="8" fill="#FCD34D" stroke="#D97706" stroke-width="2" />
+  <circle cx="256" cy="158" r="11" fill="#FDE047" stroke="#D97706" stroke-width="2.5" />
+  <circle cx="332" cy="180" r="8" fill="#FCD34D" stroke="#D97706" stroke-width="2" />
+
+  <!-- Modern Sparkle / Automation Stars -->
+  <path d="M380 96 Q380 120 404 120 Q380 120 380 144 Q380 120 356 120 Q380 120 380 96 Z" fill="#FDE047" />
+  <path d="M116 110 Q116 124 130 124 Q116 124 116 138 Q116 124 102 124 Q116 124 116 110 Z" fill="#FDE047" />
+
+  <!-- Bottom Brand Text -->
+  <text x="256" y="420" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="44" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">ROYAL PAY</text>
+  <text x="256" y="454" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="16" fill="#C7D2FE" text-anchor="middle" letter-spacing="5">AUTOMATION</text>
+</svg>

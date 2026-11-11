@@ -1,0 +1,1619 @@
+# MASTER DEVELOPMENT PROMPT
+# PROJECT: ROYAL PAY AUTOMATION SAAS
+
+## 1. YOUR ROLE
+
+You are a Senior Software Architect, SaaS Engineer, WordPress Plugin Developer, PHP Backend Engineer, Android Kotlin Developer, API Integration Specialist, Database Architect, DevSecOps Engineer, and QA Automation Engineer.
+
+Your responsibility is to design, architect, develop, test, document, and prepare a production-ready software platform named **Royal Pay Automation**.
+
+Do not treat this as a simple WordPress payment plugin.
+
+Build it as a scalable, secure, multi-tenant SaaS payment automation platform that can serve multiple independent businesses, websites, merchants, and custom order management systems.
+
+You must follow professional software engineering practices, including:
+
+- Clean Architecture
+- SOLID Principles
+- Modular Design
+- Separation of Concerns
+- Dependency Injection
+- Secure API Design
+- Database Normalization
+- Multi-Tenant Data Isolation
+- Idempotent Payment Processing
+- Automated Testing
+- Versioned Database Migrations
+- Structured Logging
+- API Documentation
+- Production Deployment Documentation
+
+Never fabricate payment verification results, provider API capabilities, merchant credentials, transaction statuses, or successful integrations.
+
+If an official provider API is not available, explicitly mark that integration as pending or unsupported and use the approved fallback method.
+
+---
+
+# 2. PRODUCT IDENTITY
+
+Product Name: Royal Pay
+
+Full Name: Royal Pay Automation
+
+Product Type: Multi-Tenant SaaS Payment Automation Platform
+
+Primary Domain:
+pay.royaltechbd.com
+
+API Base URL:
+https://pay.royaltechbd.com/wp-json/royal-pay/v1
+
+Developer/Publisher:
+RoyalTechBD
+
+Primary Market:
+Bangladesh
+
+Default Currency:
+BDT
+
+Default Timezone:
+Asia/Dhaka
+
+Supported Payment Providers:
+
+1. bKash
+2. Nagad
+3. Rocket
+
+Supported Verification Methods:
+
+1. Official Merchant API
+2. Official Provider Webhook
+3. Android SMS Listener
+4. Statement CSV/Excel Import
+5. Manual Review
+
+Supported Merchant Platforms:
+
+1. WooCommerce
+2. WordPress Custom Order System
+3. External PHP Applications
+4. Custom REST API Integrations
+
+Application Distribution:
+
+- Android Application: Private APK
+- WordPress Connector: Installable ZIP
+- SaaS Platform: Hosted on the existing CyberPanel VPS
+
+---
+
+# 3. CORE PRODUCT OBJECTIVE
+
+Develop a centralized payment automation system that automatically detects, verifies, reconciles, and matches incoming mobile financial service transactions with website orders.
+
+The platform must:
+
+1. Accept payment requests from multiple merchant websites.
+2. Generate unique payment references.
+3. Manage multiple wallet accounts per merchant.
+4. Receive verified transactions from official provider APIs.
+5. Receive incoming transaction SMS from authorized Android devices.
+6. Import transaction statements.
+7. Match transactions against pending payment requests.
+8. Prevent duplicate transaction usage.
+9. Automatically approve transactions that satisfy strict verification rules.
+10. Send payment status updates to merchant websites.
+11. Maintain complete transaction and audit history.
+12. Provide centralized SaaS administration.
+13. Support independent tenants and subscription plans.
+14. Support custom integrations through documented REST APIs.
+
+The platform must never mark an order as paid based only on a matching amount.
+
+---
+
+# 4. SYSTEM ARCHITECTURE
+
+Use a Central SaaS Platform + Merchant Connector architecture.
+
+## A. Central SaaS Platform
+
+The central application runs on:
+
+pay.royaltechbd.com
+
+Responsibilities:
+
+- Tenant Management
+- Authentication
+- User Management
+- Role and Permission Management
+- Subscription Management
+- Wallet Management
+- Device Management
+- Provider Integration
+- Payment Request Management
+- Transaction Processing
+- Matching Engine
+- Statement Import
+- Reconciliation
+- Webhook Delivery
+- API Key Management
+- Usage Tracking
+- Audit Logging
+- Security Monitoring
+
+## B. Merchant Connector
+
+Develop a separate WordPress plugin named:
+
+Royal Pay Connector
+
+The connector must communicate with the central SaaS platform through authenticated HTTPS REST APIs.
+
+It must not directly access the central SaaS database.
+
+Responsibilities:
+
+- WooCommerce Payment Gateway
+- Order Reference Generation
+- Payment Request Creation
+- Payment Status Synchronization
+- Webhook Reception
+- Signature Verification
+- WooCommerce Order Completion
+- Custom Order Adapter Support
+- Connection Health Monitoring
+
+## C. Android Agent
+
+Develop a native Android application using Kotlin.
+
+Application Name:
+
+Royal Pay Agent
+
+Responsibilities:
+
+- Device Registration
+- Incoming SMS Detection
+- Provider SMS Parsing
+- Wallet Identification
+- Transaction Extraction
+- Local Transaction Storage
+- Offline Queue
+- Background Synchronization
+- Device Heartbeat
+- Error Reporting
+- Sync History
+
+## D. Shared Payment Engine
+
+The Payment Engine must remain independent from WooCommerce, Android, and provider-specific implementations.
+
+Implement adapter interfaces for:
+
+- Provider Verification
+- Order Integration
+- Transaction Sources
+- Notification Delivery
+- Payment Reconciliation
+
+---
+
+# 5. MULTI-TENANT SAAS ARCHITECTURE
+
+Build the system as a true multi-tenant SaaS platform.
+
+Every merchant must have an independent tenant identity.
+
+Each tenant must have:
+
+- Tenant UUID
+- Business Name
+- Owner Account
+- Registered Websites
+- Wallet Accounts
+- Android Devices
+- Provider Accounts
+- API Keys
+- Webhook Endpoints
+- Subscription Plan
+- Transaction Limits
+- Device Limits
+- Usage Statistics
+- Payment History
+- Audit Logs
+
+## Tenant Isolation Requirements
+
+Every tenant-owned database record must be associated with tenant_id.
+
+Never trust tenant_id submitted by an unauthenticated client.
+
+Resolve tenant identity from authenticated credentials.
+
+Every database query involving tenant-owned records must enforce tenant scope.
+
+Prevent:
+
+- Cross-tenant transaction access
+- Cross-tenant wallet access
+- Cross-tenant device access
+- Cross-tenant payment matching
+- Cross-tenant API key usage
+- Cross-tenant statement access
+
+Use centralized tenant authorization middleware.
+
+Create automated tests proving that Tenant A cannot access Tenant B's resources.
+
+## SaaS Roles
+
+Implement these roles:
+
+1. Super Admin
+2. SaaS Support
+3. Tenant Owner
+4. Tenant Admin
+5. Finance Manager
+6. Developer
+7. Read Only User
+
+Permissions must be enforced server-side.
+
+---
+
+# 6. TECHNOLOGY STACK
+
+## Backend
+
+- PHP 8.2 or later compatible release
+- WordPress
+- WordPress REST API
+- MariaDB
+- MySQL-compatible InnoDB tables
+- WordPress Cron plus system cron
+- Database-backed background job queue
+- Redis as an optional future scaling component
+
+## WordPress
+
+Develop two independent plugins:
+
+1. Royal Pay SaaS Core
+2. Royal Pay Connector
+
+The SaaS Core runs on the central WordPress installation.
+
+The Connector runs on each merchant's WordPress website.
+
+## Android
+
+- Kotlin
+- Android SDK
+- Room Database
+- WorkManager
+- BroadcastReceiver
+- Retrofit
+- OkHttp
+- Android Keystore
+- Material Design
+
+## Security
+
+- HTTPS
+- HMAC-SHA256
+- Token Authentication
+- Nonce Validation
+- Timestamp Validation
+- AES-256-GCM for application-level secret encryption where appropriate
+- Secure Random Token Generation
+- Role-Based Access Control
+- Rate Limiting
+- Audit Logging
+
+Use maintained, compatible libraries and document their versions.
+
+---
+
+# 7. PROJECT DIRECTORY STRUCTURE
+
+Create a professional repository:
+
+royal-pay/
+
+    README.md
+    LICENSE
+    CHANGELOG.md
+    .gitignore
+    .env.example
+
+    docs/
+
+        architecture.md
+        database-schema.md
+        api-reference.md
+        security.md
+        installation.md
+        deployment.md
+        android-app.md
+        provider-integration.md
+        webhook-guide.md
+        merchant-guide.md
+        troubleshooting.md
+
+    backend/
+
+        royal-pay-saas/
+
+            royal-pay-saas.php
+
+            includes/
+
+                Core/
+                Database/
+                Tenant/
+                Authentication/
+                Authorization/
+                Admin/
+                Dashboard/
+                Wallets/
+                Devices/
+                Payments/
+                Transactions/
+                Matching/
+                Reconciliation/
+                Providers/
+                Webhooks/
+                Statements/
+                Subscriptions/
+                Billing/
+                API/
+                Security/
+                Notifications/
+                Logging/
+                Queue/
+                Reports/
+
+            assets/
+            templates/
+            languages/
+            tests/
+            vendor/
+
+    wordpress-connector/
+
+        royal-pay-connector/
+
+            royal-pay-connector.php
+
+            includes/
+
+                Core/
+                API/
+                Authentication/
+                Gateway/
+                WooCommerce/
+                Orders/
+                Webhooks/
+                Settings/
+                Logging/
+                Compatibility/
+
+            assets/
+            templates/
+            languages/
+            tests/
+
+    android/
+
+        RoyalPayAgent/
+
+            app/
+            gradle/
+            build.gradle.kts
+            settings.gradle.kts
+
+    sdk/
+
+        php/
+        examples/
+
+    database/
+
+        migrations/
+        seeds/
+
+    deployment/
+
+        cyberpanel/
+        cron/
+        backup/
+        scripts/
+
+    tests/
+
+        integration/
+        security/
+        api/
+        payment/
+        tenancy/
+
+Follow a consistent namespace convention.
+
+Suggested PHP namespace:
+
+RoyalPay\\
+
+---
+
+# 8. DATABASE ARCHITECTURE
+
+Use InnoDB for all custom tables.
+
+Use WordPress database prefix dynamically.
+
+Never hardcode wp_ as the actual production prefix.
+
+Store all BDT monetary amounts as integer minor units.
+
+For example:
+
+1500 BDT = 150000 minor units.
+
+Never use floating-point values for financial calculations.
+
+Create versioned database migrations.
+
+Use indexes for frequently searched fields.
+
+Use database constraints for duplicate prevention.
+
+## Required Database Tables
+
+### Tenant Tables
+
+- rpa_tenants
+- rpa_tenant_sites
+- rpa_users
+- rpa_roles
+- rpa_permissions
+- rpa_user_roles
+
+### SaaS Billing Tables
+
+- rpa_plans
+- rpa_subscriptions
+- rpa_usage_counters
+- rpa_billing_events
+
+### Wallet Tables
+
+- rpa_wallets
+- rpa_provider_accounts
+- rpa_wallet_verifications
+
+### Device Tables
+
+- rpa_devices
+- rpa_device_wallets
+- rpa_device_events
+
+### Payment Tables
+
+- rpa_payment_requests
+- rpa_transactions
+- rpa_payment_matches
+- rpa_payment_events
+- rpa_refunds
+
+### SMS Tables
+
+- rpa_sms_logs
+- rpa_sms_parser_rules
+
+### Statement Tables
+
+- rpa_statement_imports
+- rpa_statement_rows
+- rpa_reconciliation_batches
+
+### API Tables
+
+- rpa_api_keys
+- rpa_api_logs
+- rpa_idempotency_keys
+- rpa_webhook_endpoints
+- rpa_webhook_events
+- rpa_webhook_deliveries
+
+### Security Tables
+
+- rpa_audit_logs
+- rpa_login_attempts
+- rpa_security_events
+
+All tenant-owned tables must include tenant_id.
+
+Create the appropriate indexes, unique constraints, and foreign-key strategy.
+
+Do not create a single giant table for unrelated data.
+
+Use JSON only for flexible metadata, not for frequently queried financial fields.
+
+---
+
+# 9. PAYMENT PROVIDER INTEGRATION
+
+Implement a provider adapter architecture.
+
+Suggested interface:
+
+ProviderInterface
+
+Methods:
+
+- initiatePayment()
+- verifyTransaction()
+- getTransactionStatus()
+- processWebhook()
+- getRefundStatus()
+- validateCredentials()
+
+Implement provider-specific adapters:
+
+- BkashProvider
+- NagadProvider
+- RocketProvider
+
+IMPORTANT:
+
+Do not invent provider endpoints.
+
+Do not invent credentials.
+
+Do not assume a public API exists.
+
+Use official provider documentation and approved merchant credentials.
+
+Implement sandbox and production environments separately.
+
+Each provider must have independent configuration.
+
+Store credentials encrypted on the server.
+
+Never expose provider secrets to merchant browsers or Android applications.
+
+If API approval is pending, keep the provider adapter in a disabled or sandbox state.
+
+Clearly show the integration status in the dashboard.
+
+---
+
+# 10. HYBRID PAYMENT VERIFICATION
+
+Implement three primary transaction sources.
+
+## Method A: Official API
+
+Priority: Highest
+
+Use official merchant APIs to verify transactions.
+
+Verify:
+
+- Provider Transaction ID
+- Transaction Status
+- Amount
+- Currency
+- Receiver Wallet
+- Transaction Type
+- Payment Reference
+- Provider Response Integrity
+
+Only confirmed successful transactions can enter the automatic approval flow.
+
+## Method B: Android SMS
+
+Priority: Fallback
+
+Receive incoming SMS from registered Android devices.
+
+Support SMS parsing for:
+
+- bKash
+- Nagad
+- Rocket
+
+Extract:
+
+- Provider
+- Transaction ID
+- Amount
+- Wallet Number
+- Sender ID
+- Transaction Time
+- Payment Reference
+- Transaction Type
+
+Store the original SMS only when necessary and under a defined retention policy.
+
+Store a message hash for duplicate detection.
+
+Do not treat an SMS as cryptographic proof of a financial transaction.
+
+SMS-based automatic approval must be disabled by default.
+
+Allow SMS Auto Approval only after explicit tenant configuration, provider-specific validation, strict matching rules, and a documented risk policy.
+
+Otherwise use Manual Review.
+
+## Method C: Statement Import
+
+Support:
+
+- CSV
+- XLSX
+
+Allow administrators to:
+
+- Upload statement
+- Select provider
+- Select wallet
+- Map columns
+- Preview records
+- Validate amounts
+- Detect duplicate transactions
+- Import valid records
+- Reconcile transactions
+
+Preserve the original file hash and import audit information.
+
+Do not automatically approve payments from an untrusted or manually edited spreadsheet.
+
+---
+
+# 11. PAYMENT MATCHING ENGINE
+
+Develop a central matching service.
+
+Matching priority:
+
+1. Exact Payment Reference
+2. Exact Provider Transaction ID
+3. Provider Transaction Reference
+4. Wallet and Amount validation
+5. Transaction Type validation
+6. Transaction Date validation
+
+Amount-only matching must never approve a payment.
+
+## Matching Rules
+
+A transaction may be approved only when:
+
+- Transaction is incoming
+- Provider is supported
+- Wallet belongs to the tenant
+- Amount exactly matches
+- Currency matches
+- Transaction ID is unique
+- Transaction is successful
+- Payment Reference is valid where required
+- Payment request is still eligible
+- No duplicate match exists
+- No known reversal exists
+
+Use atomic database transactions and locking for the final payment approval operation.
+
+Ensure only one transaction can pay one payment request and one transaction cannot pay multiple requests.
+
+## Payment Statuses
+
+- pending
+- processing
+- verified
+- matched
+- paid
+- failed
+- unmatched
+- duplicate
+- review_required
+- expired
+- cancelled
+- reversed
+- refunded
+
+Maintain a payment event history.
+
+Never silently overwrite a previous payment state.
+
+---
+
+# 12. AUTOMATIC PAYMENT APPROVAL
+
+Implement configurable approval policies.
+
+Default policy:
+
+Official API confirmed success:
+Automatic approval enabled.
+
+Valid provider webhook:
+Automatic approval enabled only after signature verification and server-side status validation.
+
+SMS:
+Manual review by default.
+
+Statement import:
+Manual review by default.
+
+Amount-only matching:
+Never approved.
+
+Duplicate transaction:
+Never approved.
+
+Reversed or failed transaction:
+Never approved.
+
+A tenant may enable SMS-based auto approval only when the platform's minimum security policy is satisfied.
+
+Never allow a tenant to override critical platform security restrictions.
+
+When payment is approved:
+
+1. Create immutable payment event.
+2. Update payment request status.
+3. Create transaction match.
+4. Update the merchant order.
+5. Dispatch webhook.
+6. Record webhook delivery result.
+7. Update reporting statistics.
+
+Use idempotency and concurrency protection.
+
+---
+
+# 13. REST API VERSION 1
+
+Base URL:
+
+https://pay.royaltechbd.com/wp-json/royal-pay/v1
+
+Implement the following endpoint groups.
+
+## Tenant API
+
+POST /tenants/register
+
+GET /tenants/me
+
+## Site API
+
+POST /sites/register
+
+GET /sites
+
+POST /sites/{id}/disconnect
+
+## Wallet API
+
+GET /wallets
+
+POST /wallets
+
+PUT /wallets/{id}
+
+POST /wallets/{id}/verify
+
+POST /wallets/{id}/disable
+
+## Device API
+
+POST /devices/register
+
+GET /devices/config
+
+POST /devices/heartbeat
+
+POST /devices/sms/batch
+
+POST /devices/transactions/batch
+
+POST /devices/{id}/revoke
+
+## Payment API
+
+POST /payments
+
+GET /payments/{id}
+
+GET /payments/reference/{reference}
+
+POST /payments/{id}/verify
+
+POST /payments/{id}/cancel
+
+## Transaction API
+
+GET /transactions
+
+GET /transactions/{id}
+
+## Provider API
+
+POST /providers/{provider}/connect
+
+POST /providers/{provider}/webhook
+
+GET /providers/{provider}/status
+
+POST /providers/{provider}/verify
+
+## Statement API
+
+POST /statements/import
+
+GET /statements/{id}
+
+POST /statements/{id}/reconcile
+
+## Reconciliation API
+
+GET /reconciliation/unmatched
+
+POST /reconciliation/{id}/review
+
+## Subscription API
+
+GET /plans
+
+GET /subscription
+
+GET /usage
+
+## Webhook API
+
+GET /webhooks
+
+POST /webhooks
+
+POST /webhooks/{id}/rotate-secret
+
+Use consistent JSON response formats.
+
+Use appropriate HTTP status codes.
+
+Implement request validation, authentication, authorization, rate limiting, idempotency, and error handling.
+
+Generate complete OpenAPI 3.x documentation.
+
+---
+
+# 14. API AUTHENTICATION
+
+Implement:
+
+- Bearer Token Authentication
+- HMAC-SHA256 Request Signing
+- Timestamp Validation
+- Nonce Validation
+- Idempotency Keys
+- Per-Tenant API Scopes
+- Token Revocation
+- Rate Limiting
+
+Each tenant must have separate API credentials.
+
+Each Android device must have a separate device credential.
+
+Do not use a single global API secret for all merchants.
+
+Do not hardcode credentials in source code.
+
+Use secure random secret generation.
+
+Store only token hashes when token recovery is unnecessary.
+
+Use constant-time signature comparisons.
+
+---
+
+# 15. WEBHOOK SYSTEM
+
+Implement outbound merchant webhooks.
+
+Supported events:
+
+payment.created
+
+payment.processing
+
+payment.verified
+
+payment.paid
+
+payment.failed
+
+payment.reversed
+
+payment.review_required
+
+Each webhook must include:
+
+- event_id
+- event
+- created_at
+- tenant_id
+- payment_id
+- external_order_id
+- payment_reference
+- transaction_id
+- provider
+- amount_minor
+- currency
+- verification_source
+
+Sign outgoing webhook payloads using a tenant-specific secret.
+
+Include:
+
+- Event ID
+- Timestamp
+- Signature
+- Delivery Attempt
+
+Retry failed delivery using exponential backoff.
+
+Use a webhook delivery queue.
+
+A failed merchant webhook must never undo a verified payment.
+
+Provide a delivery history and manual retry function.
+
+---
+
+# 16. ANDROID APPLICATION
+
+Application Name:
+
+Royal Pay Agent
+
+Package Name:
+
+com.royaltechbd.royalpay
+
+Use Kotlin and native Android development.
+
+## Main Screens
+
+1. Splash Screen
+2. Device Registration
+3. Dashboard
+4. Wallet List
+5. SMS Monitoring Status
+6. Transaction History
+7. Sync History
+8. Connection Status
+9. Settings
+10. Diagnostics
+
+## Android Modules
+
+- SMS Receiver
+- SMS Parser
+- Wallet Mapper
+- Local Repository
+- Room Database
+- Sync Worker
+- API Client
+- Device Authentication
+- Secure Configuration
+- Diagnostics
+
+## SMS Workflow
+
+1. Receive SMS.
+2. Identify provider using approved parser rules.
+3. Identify associated wallet.
+4. Extract transaction details.
+5. Validate the parsed fields.
+6. Save transaction locally.
+7. Generate a unique message hash.
+8. Add transaction to sync queue.
+9. Synchronize through HTTPS API.
+10. Save server response.
+
+Support offline operation.
+
+Use WorkManager for persistent background synchronization.
+
+Use exponential retry for temporary network errors.
+
+Never delete unsynchronized transaction records.
+
+## Android Security
+
+- Use Android Keystore.
+- Do not hardcode API secrets.
+- Allow device revocation.
+- Support token rotation.
+- Validate server TLS.
+- Minimize personal SMS data.
+- Provide clear permission explanations.
+- Avoid unnecessary SMS permission requests.
+
+Use only permitted Android APIs and respect Android version restrictions and applicable distribution policies.
+
+---
+
+# 17. SMS PARSER ARCHITECTURE
+
+Implement independent parser classes.
+
+BkashSmsParser
+
+NagadSmsParser
+
+RocketSmsParser
+
+Create a common interface.
+
+Each parser should return a normalized transaction object.
+
+Fields:
+
+- provider
+- transaction_id
+- amount_minor
+- wallet_number
+- transaction_type
+- reference
+- occurred_at
+- currency
+- parser_version
+- confidence
+- parse_status
+
+Support multiple known message formats.
+
+Do not assume one fixed SMS format.
+
+Maintain versioned parser rules.
+
+Include positive and negative test cases.
+
+If required fields are missing, return review_required.
+
+Never invent missing transaction values.
+
+---
+
+# 18. WOO COMMERCE CONNECTOR
+
+Develop a separate installable WordPress plugin.
+
+Plugin Name:
+
+Royal Pay Connector
+
+Plugin Slug:
+
+royal-pay-connector
+
+Support:
+
+- Current supported WooCommerce versions
+- HPOS
+- Checkout integration
+- Order reference creation
+- Payment request creation
+- Webhook processing
+- Payment status synchronization
+- Order notes
+- Refund status synchronization where supported
+
+Use WooCommerce CRUD APIs.
+
+Do not directly update WooCommerce order records through SQL.
+
+When a verified payment is received:
+
+1. Validate webhook signature.
+2. Validate event ID.
+3. Check payment ID.
+4. Check external order ID.
+5. Verify amount and currency.
+6. Check that the order is eligible for payment.
+7. Call payment_complete() only once.
+8. Add a transaction note.
+9. Save the processed event ID.
+
+Implement a scheduled reconciliation mechanism for missed callbacks.
+
+---
+
+# 19. CUSTOM ORDER SYSTEM INTEGRATION
+
+Create a documented Custom Order Adapter.
+
+Methods:
+
+- get_order()
+- get_expected_amount()
+- get_order_status()
+- mark_as_paid()
+- add_order_note()
+
+Provide a PHP SDK.
+
+Provide working integration examples.
+
+Allow non-WordPress applications to integrate through REST API.
+
+Support external order IDs and merchant references.
+
+Do not assume every custom system has the same order database schema.
+
+---
+
+# 20. STATEMENT IMPORT AND RECONCILIATION
+
+Support CSV and XLSX uploads.
+
+Build a mapping interface.
+
+Required fields:
+
+- Transaction ID
+- Amount
+- Transaction Date
+- Transaction Type
+- Wallet
+- Reference
+
+Optional fields:
+
+- Sender
+- Receiver
+- Balance
+- Provider Status
+
+Import workflow:
+
+1. Upload
+2. File validation
+3. Hash generation
+4. Column mapping
+5. Preview
+6. Duplicate detection
+7. Row validation
+8. Transaction import
+9. Reconciliation
+10. Summary report
+
+Reject invalid files.
+
+Limit file size.
+
+Validate MIME type and extension.
+
+Prevent spreadsheet formula execution and CSV injection in exports.
+
+---
+
+# 21. SAAS DASHBOARD
+
+Develop a responsive administration interface.
+
+## Super Admin Dashboard
+
+Display:
+
+- Total Tenants
+- Active Tenants
+- Suspended Tenants
+- Total Payment Requests
+- Verified Transactions
+- Total Transaction Value
+- Pending Review
+- Unmatched Transactions
+- Active Android Devices
+- Provider API Status
+- Webhook Delivery Status
+- Subscription Revenue
+- System Health
+
+## Tenant Dashboard
+
+Display:
+
+- Total Payments
+- Verified Payments
+- Pending Payments
+- Unmatched Payments
+- Wallet Status
+- Connected Devices
+- Recent Transactions
+- API Usage
+- Subscription Plan
+
+## Navigation
+
+- Dashboard
+- Tenants
+- Users
+- Sites
+- Wallets
+- Devices
+- Payments
+- Transactions
+- Statement Import
+- Reconciliation
+- Providers
+- Webhooks
+- API Keys
+- Subscription
+- Reports
+- Settings
+- Audit Logs
+
+Use responsive design.
+
+Provide filters, pagination, date ranges, search, and CSV export.
+
+Never display full sensitive wallet credentials or API secrets.
+
+---
+
+# 22. SUBSCRIPTION AND BILLING
+
+Build SaaS subscription management.
+
+Support configurable plans:
+
+- Free Trial
+- Starter
+- Business
+- Professional
+- Enterprise
+
+Plan limits must be configurable.
+
+Possible limits:
+
+- Monthly transaction count
+- Number of wallets
+- Number of Android devices
+- Number of connected sites
+- API request volume
+- Statement import volume
+- Data retention period
+
+Do not hardcode pricing.
+
+Provide plan configuration in Super Admin.
+
+Implement usage counters and billing history.
+
+For paid subscription integration, use an independently verified, approved payment provider.
+
+Do not confuse Royal Pay's merchant transaction verification with Royal Pay SaaS subscription billing.
+
+---
+
+# 23. SECURITY REQUIREMENTS
+
+Implement a security-first design.
+
+Required controls:
+
+1. HTTPS everywhere.
+2. Tenant-level authorization.
+3. Role-based permissions.
+4. HMAC request signing.
+5. Nonce replay protection.
+6. Idempotency.
+7. SQL prepared statements.
+8. Input validation.
+9. Output escaping.
+10. CSRF protection for browser actions.
+11. Rate limiting.
+12. Secure file upload.
+13. Encrypted provider credentials.
+14. Device revocation.
+15. API key rotation.
+16. Webhook signature verification.
+17. Audit logging.
+18. Backup encryption.
+19. Secret redaction from logs.
+20. Security event monitoring.
+
+Never log:
+
+- Full API secrets
+- Passwords
+- Full authentication tokens
+- Unnecessary SMS content
+- Full sensitive provider credentials
+
+Create a threat model.
+
+Test cross-tenant access vulnerabilities.
+
+Test duplicate payment and replay scenarios.
+
+---
+
+# 24. CYBERPANEL DEPLOYMENT
+
+Deploy on the existing CyberPanel VPS.
+
+Initial environment:
+
+- Ubuntu 24.04 LTS
+- CyberPanel
+- OpenLiteSpeed
+- PHP 8.2+
+- MariaDB
+- SSL Certificate
+- System Cron
+
+Proposed domain:
+
+pay.royaltechbd.com
+
+Deployment tasks:
+
+1. Check VPS CPU, RAM, disk and existing workloads.
+2. Create the application subdomain.
+3. Configure DNS.
+4. Configure SSL.
+5. Install WordPress.
+6. Configure PHP extensions.
+7. Configure database.
+8. Install SaaS Core plugin.
+9. Run database migrations.
+10. Configure system cron.
+11. Configure secure file permissions.
+12. Configure backup.
+13. Configure logging.
+14. Configure monitoring.
+15. Perform smoke tests.
+
+Do not overwrite existing websites or databases.
+
+Do not run destructive server commands without explicit authorization.
+
+Provide installation and rollback scripts.
+
+---
+
+# 25. BACKGROUND JOBS
+
+Implement a reliable background job system.
+
+Jobs:
+
+- Provider verification
+- SMS transaction processing
+- Webhook delivery
+- Failed webhook retry
+- Statement parsing
+- Reconciliation
+- Subscription checks
+- Usage calculations
+- Device heartbeat monitoring
+- Expired payment cleanup
+- Audit retention
+
+Use retry limits.
+
+Use exponential backoff.
+
+Use dead-letter handling for permanently failed jobs.
+
+Avoid relying only on WordPress traffic-triggered WP-Cron for critical processing.
+
+---
+
+# 26. TESTING REQUIREMENTS
+
+Create unit, integration, API, security and end-to-end tests.
+
+Mandatory test scenarios:
+
+1. Successful official API verification.
+2. Invalid provider signature.
+3. Invalid transaction ID.
+4. Duplicate transaction.
+5. Wrong amount.
+6. Wrong wallet.
+7. Wrong currency.
+8. Wrong payment reference.
+9. Expired payment request.
+10. Reversed transaction.
+11. Two simultaneous payment requests.
+12. Two simultaneous webhook deliveries.
+13. Duplicate Android SMS.
+14. Offline Android synchronization.
+15. Invalid CSV file.
+16. Duplicate statement upload.
+17. Cross-tenant access attempt.
+18. Revoked API key.
+19. Replayed API request.
+20. Failed merchant webhook.
+21. WooCommerce HPOS payment completion.
+22. Custom Order Adapter.
+23. Subscription limit exceeded.
+24. Provider API timeout.
+
+A payment must never become paid when a critical validation test fails.
+
+---
+
+# 27. DEVELOPMENT EXECUTION STRATEGY
+
+Develop the system incrementally.
+
+Do not attempt to generate the entire platform in one unstructured operation.
+
+Follow these phases.
+
+## Phase 1: Foundation
+
+- Repository Setup
+- Architecture
+- Database Migrations
+- Tenant Model
+- Authentication
+- Authorization
+
+## Phase 2: SaaS Core
+
+- Admin Dashboard
+- Tenant Management
+- Site Management
+- Wallet Management
+- API Key Management
+- Subscription Framework
+
+## Phase 3: Payment Engine
+
+- Payment Request
+- Transaction Repository
+- Matching Engine
+- Duplicate Protection
+- Payment State Machine
+- Audit History
+
+## Phase 4: Android Agent
+
+- Android Project
+- Device Registration
+- SMS Receiver
+- Parser Modules
+- Room Database
+- Background Sync
+
+## Phase 5: Hybrid Verification
+
+- Provider Adapter Framework
+- Official API Integration
+- Webhook Verification
+- Statement Import
+- Reconciliation
+
+## Phase 6: Merchant Integrations
+
+- WooCommerce Connector
+- HPOS Support
+- PHP SDK
+- Custom Order API
+
+## Phase 7: Production
+
+- Security Testing
+- Performance Testing
+- Backup
+- Monitoring
+- Documentation
+- CyberPanel Deployment
+
+At the end of each phase:
+
+1. List completed features.
+2. List incomplete features.
+3. Run relevant tests.
+4. Fix discovered errors.
+5. Update documentation.
+6. Report exact file paths.
+7. Do not claim success without test evidence.
+
+---
+
+# 28. CODING RULES
+
+Follow these mandatory rules:
+
+- Write real executable code.
+- Do not provide pseudo-code as a substitute for implementation.
+- Never leave core payment logic as TODO.
+- Never hardcode production credentials.
+- Never invent provider APIs.
+- Never bypass authentication.
+- Never bypass tenant isolation.
+- Never approve an amount-only transaction.
+- Never mark duplicate transactions as paid.
+- Never use floating-point financial calculations.
+- Never trust unverified client-side data.
+- Never expose secrets in browser JavaScript.
+- Never modify WooCommerce orders through direct SQL.
+- Use proper WordPress coding standards.
+- Add comments for complex business rules.
+- Use prepared database queries.
+- Maintain backwards-compatible API versioning.
+- Provide migration and rollback instructions.
+- Provide complete installation instructions.
+
+If any requirement cannot be safely implemented, document the limitation and propose an approved alternative.
+
+---
+
+# 29. REQUIRED FINAL DELIVERABLES
+
+The completed project must contain:
+
+1. Complete SaaS Backend Source Code.
+2. Royal Pay SaaS WordPress Plugin ZIP.
+3. Royal Pay Connector WordPress Plugin ZIP.
+4. Android Kotlin Project.
+5. Buildable Private Android APK.
+6. Database Migration Files.
+7. REST API OpenAPI Specification.
+8. PHP SDK.
+9. API Integration Examples.
+10. Provider Adapter Framework.
+11. SMS Parser Test Fixtures.
+12. Automated Test Suite.
+13. Security Documentation.
+14. Architecture Documentation.
+15. CyberPanel Deployment Guide.
+16. Backup and Recovery Guide.
+17. Merchant Onboarding Guide.
+18. API Developer Documentation.
+19. Production Configuration Example.
+20. Release Notes.
+
+Only mark a deliverable complete when its actual files exist and relevant tests pass.
+
+---
+
+# 30. FIRST TASK
+
+Before writing the main application code:
+
+1. Analyze this entire specification.
+2. Identify missing technical decisions.
+3. Produce a detailed system architecture.
+4. Produce an ER diagram.
+5. Produce the complete database migration plan.
+6. Produce an API endpoint matrix.
+7. Produce the security threat model.
+8. Produce a phased development checklist.
+9. Create the Git repository directory structure.
+10. Identify dependencies and external provider requirements.
+
+Then begin Phase 1.
+
+Do not ask the user to repeat requirements already specified.
+
+If an essential decision is missing, ask only the most important clarification.
+
+Otherwise make a documented, secure default decision and continue.
+
+Your ultimate goal is a maintainable, secure, scalable, production-ready product named **Royal Pay Automation SaaS**.
